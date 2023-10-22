@@ -1,0 +1,38 @@
+
+<div class="row m-5" *ngIf="data">
+  <hr>
+  <div class="col-3">
+    <div class="card">
+      <div class="card-body">
+        <b class="card-title">
+          {{data.Precursor_Id}}
+        </b>
+        <p>
+          Proteotypic: {{data.Proteotypic}} <br>
+          Strip Sequence: {{data.Stripped_Sequence}} <br>
+          Time Points: {{data.n_TimePoints}} <br>
+          Samples: {{data.n_Samples}} <br>
+          TAU POI: {{data.tau_POI}} <br>
+          TAU POI Range: {{data.tau_POI_range}} <br>
+          TAU POI Range Relative: {{data.tau_POI_range_relative}} <br>
+          TAU POI Lower Bound: {{data.tau_POI_lower_bound}} <br>
+          TAU POI Upper Bound: {{data.tau_POI_upper_bound}} <br>
+          Halflife POI: {{data.HalfLife_POI}} <br>
+          Halflife POI Range: {{data.HalfLife_POI_range}} <br>
+          Halflife POI Range Relative: {{data.HalfLife_POI_range_relative}} <br>
+          Halflife POI Lower Bound: {{data.HalfLife_POI_lower_bound}} <br>
+          Halflife POI Upper Bound: {{data.HalfLife_POI_upper_bound}} <br>
+          rss: {{data.rss}} <br>
+          AverageRSS: {{data.AverageRSS}} <br>
+          Engine: {{data.Engine}} <br>
+          Tissue: {{data.Tissue}} <br>
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="col-9">
+    <app-scatter-time-plot [data]="data.values"></app-scatter-time-plot>
+    <app-violin-time-plot [data]="data.values"></app-violin-time-plot>
+  </div>
+
+</div>

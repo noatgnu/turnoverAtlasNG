@@ -1,0 +1,73 @@
+<div class="card mb-5">
+  <div class="card-body">
+    <form [formGroup]="form">
+      <div class="form-group">
+        <label for="filterPrecursorID">
+          Precursor ID Display Filter
+        </label>
+        <input
+          type="search"
+          class="form-control"
+          id="filterPrecursorID"
+          placeholder="Precursor ID"
+          formControlName="filterPrecursorID">
+      </div>
+    </form>
+  </div>
+</div>
+
+
+
+<ngb-pagination [collectionSize]="displayDF.count()" [(page)]="page" [boundaryLinks]="true" [rotate]="true" [pageSize]="pageSize">
+  <ng-template ngbPaginationPages let-page let-pages="pages">
+    <li class="ngb-custom-pages-item" *ngIf="pages.length > 0">
+      <div class="mb-3 d-flex flex-nowrap px-2">
+        <label id="paginationInputLabel" for="paginationInput" class="col-form-label me-2 ms-1">Page</label>
+        <input
+          #i
+          type="text"
+          inputmode="numeric"
+          pattern="[0-9]*"
+          class="form-control custom-pages-input"
+          id="paginationInput"
+          [value]="page"
+          (keyup.enter)="selectPage(i.value)"
+          (blur)="selectPage(i.value)"
+          (input)="formatInput($any($event).target)"
+          aria-labelledby="paginationInputLabel paginationDescription"
+          style="width: 2.5rem"
+        />
+        <span id="paginationDescription" class="col-form-label text-nowrap px-2"> of {{pages.length}}</span>
+      </div>
+    </li>
+  </ng-template>
+</ngb-pagination>
+<ng-container *ngFor="let r of displayDF.toArray()|slice: (page-1) * pageSize: page*pageSize">
+  <app-protein-view-peptide-container [data]="r"></app-protein-view-peptide-container>
+
+</ng-container>
+
+<ngb-pagination [collectionSize]="displayDF.count()" [(page)]="page" [boundaryLinks]="true" [rotate]="true" [pageSize]="pageSize">
+  <ng-template ngbPaginationPages let-page let-pages="pages">
+    <li class="ngb-custom-pages-item" *ngIf="pages.length > 0">
+      <div class="mb-3 d-flex flex-nowrap px-2">
+        <label id="paginationInputLabelBottom" for="paginationInput" class="col-form-label me-2 ms-1">Page</label>
+        <input
+          #i
+          type="text"
+          inputmode="numeric"
+          pattern="[0-9]*"
+          class="form-control custom-pages-input"
+          id="paginationInputBottom"
+          [value]="page"
+          (keyup.enter)="selectPage(i.value)"
+          (blur)="selectPage(i.value)"
+          (input)="formatInput($any($event).target)"
+          aria-labelledby="paginationInputLabel paginationDescription"
+          style="width: 2.5rem"
+        />
+        <span id="paginationDescriptionBottom" class="col-form-label text-nowrap px-2"> of {{pages.length}}</span>
+      </div>
+    </li>
+  </ng-template>
+</ngb-pagination>
