@@ -1,0 +1,68 @@
+<div class="d-flex" style="gap: 20px">
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">
+        <p>
+          Peptide Filter Parameter Control
+        </p>
+      </h5>
+      <form [formGroup]="form" class="d-flex" style="gap: 20px">
+        <div class="form-group" style="width: 300px">
+          <label for="tissues">Tissue Selection</label>
+          <select id="tissues" class="form-control" formControlName="tissues" multiple>
+            <option *ngFor="let o of tissues" [value]="o">{{o}}</option>
+          </select>
+        </div>
+        <div class="form-group" style="width: 300px">
+          <label for="engines">Engine Selection</label>
+          <select id="engines" class="form-control" formControlName="engines" multiple>
+            <option *ngFor="let o of engines" [value]="o">{{o}}</option>
+          </select>
+        </div>
+        <div>
+          <div class="form-check">
+            <input class="form-check-input" formControlName="proteotypic" id="proteotypic" type="checkbox">
+            <label class="form-check-label" for="proteotypic">
+              Proteotypic Peptides Only
+            </label>
+          </div>
+          <div class="form-group">
+            <label for="minSamples">Minimum Number of Detected Samples</label>
+            <input id="minSamples" class="form-control" type="number" formControlName="minSamplesDetected">
+          </div>
+          <div class="form-group">
+            <label for="minTimepoints">Minimum Number of Detected Timepoints</label>
+            <input id="minTimepoints" class="form-control" type="number" formControlName="minTimepointsDetected">
+          </div>
+        </div>
+
+
+      </form>
+    </div>
+    <div class="card-footer d-flex" style="gap: 20px">
+      <button class="btn btn-primary" (click)="reloadData()">Reload Data</button>
+      <button class="btn btn-primary" (click)="reset()">Reset</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">
+        <p>
+          Experiment Parameters
+        </p>
+      </h5>
+      <form [formGroup]="formExperimentParameters" class="d-flex" style="gap: 20px">
+        <div class="form-group" style="width: 300px">
+          <label for="experiment">Sample Selection</label>
+          <select id="experiment" formControlName="samples" multiple class="form-control">
+            <option *ngFor="let o of samples" [value]="o">{{o}} {{web.sampleMap[o].Sample_Label}} - day {{web.sampleMap[o].Days}} - rep {{web.sampleMap[o].Replicate}}</option>
+          </select>
+          <small>Selected {{formExperimentParameters.value.samples.length}} samples</small>
+        </div>
+      </form>
+    </div>
+    <div class="card-footer">
+      <button class="btn btn-primary" (click)="updateSelection()">Update Selection</button>
+    </div>
+  </div>
+</div>

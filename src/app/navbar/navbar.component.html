@@ -3,7 +3,7 @@
     <a class="navbar-brand" href="#">
       Turnover Atlas
     </a>
-    <form class="d-flex" role="search" (ngSubmit)="searchData()">
+    <form class="d-flex" (ngSubmit)="searchData()" style="gap: 20px">
       <input
         [resultTemplate]="rt"
         [editable]="false"
@@ -14,8 +14,18 @@
         [ngModelOptions]="{standalone: true}"
         class="form-control me-2"
         type="search"
-        placeholder="UniprotID"
+        placeholder="Search Term"
         aria-label="Search">
+      <div class="form-group">
+        <select [(ngModel)]="searchType" [ngModelOptions]="{standalone: true}" class="form-control" id="selectionType">
+          <option value="Protein_Group">
+            Protein Group
+          </option>
+          <option value="Genes">
+            Gene
+          </option>
+        </select>
+      </div>
       <button class="btn btn-outline-dark" type="submit"><i class="bi bi-search"></i></button>
     </form>
   </div>

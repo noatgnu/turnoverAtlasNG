@@ -20,6 +20,8 @@ import { ProteinViewScatterHVsLComponent } from './protein-view-scatter-h-vs-l/p
 import { ProteinViewTissueBasedComponent } from './protein-view-tissue-based/protein-view-tissue-based.component';
 import { ProteinViewPeptideCollectionComponent } from './protein-view-peptide-collection/protein-view-peptide-collection.component';
 import { ViolinTimePlotComponent } from './violin-time-plot/violin-time-plot.component';
+import { ProteinModellingCollectionComponent } from './protein-modelling-collection/protein-modelling-collection.component';
+import { ProteinModellingComponent } from './protein-modelling/protein-modelling.component';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 @NgModule({
@@ -33,7 +35,9 @@ PlotlyModule.plotlyjs = PlotlyJS;
     ProteinViewScatterHVsLComponent,
     ProteinViewTissueBasedComponent,
     ProteinViewPeptideCollectionComponent,
-    ViolinTimePlotComponent
+    ViolinTimePlotComponent,
+    ProteinModellingCollectionComponent,
+    ProteinModellingComponent
   ],
   imports: [
     BrowserModule,

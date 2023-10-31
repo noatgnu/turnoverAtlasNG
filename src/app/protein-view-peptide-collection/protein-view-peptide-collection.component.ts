@@ -2,7 +2,7 @@ import {Component, Input} from '@angular/core';
 import {DataFrame, IDataFrame} from "data-forge";
 import {MSData} from "../msdata";
 import {debounceTime, distinctUntilChanged, map, Observable, OperatorFunction} from "rxjs";
-import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-protein-view-peptide-collection',
@@ -37,12 +37,33 @@ export class ProteinViewPeptideCollectionComponent {
     )
 
   form: FormGroup = this.fb.group({
-    filterPrecursorID: new FormControl<string>("")
+    filterPrecursorID: new FormControl<string>(""),
+    pageSize: new FormControl<number>(10, [Validators.required, Validators.min(1)]),
+    validTAUPOI: new FormControl<boolean>(false)
   })
 
+
+
   constructor(private fb: FormBuilder) {
-    this.form.valueChanges.subscribe((value) => {
+    this.form.controls['filterPrecursorID'].valueChanges.subscribe((value) => {
       this.displayDF = this.data.where(row => row.Precursor_Id.indexOf(value.filterPrecursorID.toUpperCase()) > -1)
+    })
+    this.form.controls['pageSize'].valueChanges.subscribe((value) => {
+      if (value > 0) {
+        this.pageSize = value
+      }
+    })
+    this.form.valueChanges.subscribe((value) => {
+      if (value.filterPrecursorID === "") {
+        this.displayDF = this.data
+      } else {
+        this.displayDF = this.data.where(row => row.Precursor_Id.indexOf(value.filterPrecursorID.toUpperCase()) > -1)
+      }
+      if (value.validTAUPOI) {
+        this.displayDF = this.displayDF.where(row => row.tau_POI !== null)
+      }
+        this.displayDF = this.displayDF.bake()
+        this.pageSize = value.pageSize
     })
   }
 

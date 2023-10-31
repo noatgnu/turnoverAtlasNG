@@ -19,7 +19,7 @@ export class NavbarComponent {
       distinctUntilChanged(),
       tap(() => this.searching = true),
       switchMap((term: string) =>
-          this.web.searchProtein(term).pipe(
+          this.web.typeAheadSearchTerm(term, this.searchType).pipe(
         tap(() => this.searchFailed = false),
         catchError(() => {
           this.searchFailed = true;
@@ -29,6 +29,8 @@ export class NavbarComponent {
       ),
       tap(() => this.searching = false)
     )
+
+  searchType = "Protein_Group"
 
   resultFormatter = (x: string, term: string) => {
     //truncate long protein names to maximum 10 characters that match the search term
