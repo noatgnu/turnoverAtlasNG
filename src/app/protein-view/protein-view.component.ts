@@ -18,21 +18,6 @@ export class ProteinViewComponent {
 
   set filteredData(value: IDataFrame<number, MSData>) {
     this._filteredDF = value
-    const ids: number[] = value.getSeries("id").bake().toArray()
-    const days: number[] = []
-    for (const s of this.web.selectedSamples) {
-      if (!days.includes(this.web.sampleMap[s].Days)) {
-        days.push(this.web.sampleMap[s].Days)
-      }
-    }
-
-    this.web.postModellingDataMass(ids, days).subscribe((data) => {
-      this.modellingData = new DataFrame(data)
-      // groupby tissue and engine
-      this.modellingDataGroup = this.modellingData.groupBy((row) => {
-        return row.Tissue
-      }).bake()
-    })
   }
 
   get filteredData(): IDataFrame<number, MSData> {
@@ -41,6 +26,7 @@ export class ProteinViewComponent {
 
   modellingData: IDataFrame<number, Modelling> = new DataFrame()
   modellingDataGroup: ISeries<number, IDataFrame<number, Modelling>> = new Series()
+
   @Input() set proteinGroup(value: string) {
     this.protein = value
     this.web.getMSData(this.protein).subscribe((data) => {
@@ -59,5 +45,25 @@ export class ProteinViewComponent {
 
   handlerFilterDFUpdate(value: IDataFrame<number, MSData>) {
     this.filteredData = value
+    console.log(value)
+    const ids: number[] = value.getSeries("id").bake().toArray()
+    const days: number[] = []
+    for (const s of this.web.selectedSamples) {
+      if (!days.includes(this.web.sampleMap[s].Days)) {
+        days.push(this.web.sampleMap[s].Days)
+      }
+    }
+    console.log(ids, days)
+    if (days.length > 0 && ids.length > 0) {
+
+      this.web.postModellingDataMass(ids, days).subscribe((data) => {
+        this.modellingData = new DataFrame(data)
+        this.modellingDataGroup = this.modellingData.groupBy((row) => {
+          return row.Tissue
+        }).bake()
+        console.log(this.modellingData)
+      })
+    }
+
   }
 }

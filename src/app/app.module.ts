@@ -22,6 +22,8 @@ import { ProteinViewPeptideCollectionComponent } from './protein-view-peptide-co
 import { ViolinTimePlotComponent } from './violin-time-plot/violin-time-plot.component';
 import { ProteinModellingCollectionComponent } from './protein-modelling-collection/protein-modelling-collection.component';
 import { ProteinModellingComponent } from './protein-modelling/protein-modelling.component';
+import { ProteinTauDistributionComponent } from './protein-tau-distribution/protein-tau-distribution.component';
+import { ProteinTauCollectionComponent } from './protein-tau-collection/protein-tau-collection.component';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 @NgModule({
@@ -37,7 +39,9 @@ PlotlyModule.plotlyjs = PlotlyJS;
     ProteinViewPeptideCollectionComponent,
     ViolinTimePlotComponent,
     ProteinModellingCollectionComponent,
-    ProteinModellingComponent
+    ProteinModellingComponent,
+    ProteinTauDistributionComponent,
+    ProteinTauCollectionComponent
   ],
   imports: [
     BrowserModule,

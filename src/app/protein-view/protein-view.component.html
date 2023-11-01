@@ -2,14 +2,18 @@
   <div><h1><b>{{protein}}</b></h1></div>
 </div>
 <div class="container">
-  <app-protein-search [data]="df" (filteredData)="filteredData=$event"></app-protein-search>
+  <app-protein-search [data]="df" (filteredData)="handlerFilterDFUpdate($event)"></app-protein-search>
 </div>
 
 <!--<div class="container mt-5" *ngIf="filteredDF.count() > 0">-->
 <!--  <app-protein-view-tissue-based [data]="filteredDF"></app-protein-view-tissue-based>-->
 <!--</div>-->
 
-<div class="container mt-5" *ngIf="modellingDataGroup.count() > 0">
+<div class="container mt-5" *ngIf="filteredData.count() > 0; else empty">
+  <app-protein-tau-collection [data]="filteredData"></app-protein-tau-collection>
+</div>
+
+<div class="container mt-5" *ngIf="modellingDataGroup.count() > 0; else loadingModelling">
   <app-protein-modelling-collection [data]="modellingDataGroup"></app-protein-modelling-collection>
 </div>
 
@@ -21,6 +25,14 @@
   <div class="container d-flex justify-content-center align-content-center">
     <p>
       No data could be found with the above filter parameters.
+    </p>
+  </div>
+</ng-template>
+
+<ng-template #loadingModelling>
+  <div class="container d-flex justify-content-center align-content-center">
+    <p>
+      Loading modelling data...
     </p>
   </div>
 </ng-template>

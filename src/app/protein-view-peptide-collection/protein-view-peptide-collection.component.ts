@@ -16,7 +16,12 @@ export class ProteinViewPeptideCollectionComponent {
   precursorID: string[] = []
   @Input() set data (value: IDataFrame<number, MSData>) {
     this._data = value
-    this.displayDF = value
+
+    if (this.form.value.validTAUPOI) {
+      this.displayDF = value.where(row => row.tau_POI !== null).bake()
+    } else {
+      this.displayDF = value
+    }
     this.precursorID = this._data.getSeries("Precursor_Id").distinct().toArray()
   }
 
@@ -39,7 +44,7 @@ export class ProteinViewPeptideCollectionComponent {
   form: FormGroup = this.fb.group({
     filterPrecursorID: new FormControl<string>(""),
     pageSize: new FormControl<number>(10, [Validators.required, Validators.min(1)]),
-    validTAUPOI: new FormControl<boolean>(false)
+    validTAUPOI: new FormControl<boolean>(true)
   })
 
 

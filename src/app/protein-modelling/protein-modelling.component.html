@@ -1,7 +1,11 @@
-<div class="card">
+<div class="card" *ngIf="engines.length > 0">
   <div class="card-body">
     <h5 class="card-title">{{data.first().Tissue}}</h5>
-    <plotly-plot [data]="graphData" [layout]="graphLayout" [updateOnDataChange]="true" [updateOnLayoutChange]="true"></plotly-plot>
+    <div class="row gap-1">
+      <div *ngFor="let e of engines" class="col-4">
+        <plotly-plot [data]="graphDataMap[e]" [layout]="graphLayoutMap[e]" [updateOnDataChange]="true" [updateOnLayoutChange]="true"></plotly-plot>
+      </div>
+    </div>
   </div>
 </div>
 

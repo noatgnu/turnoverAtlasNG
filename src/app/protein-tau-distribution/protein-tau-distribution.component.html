@@ -1,0 +1,4 @@
+<div *ngFor="let e of engineList">
+  <plotly-plot [data]="graphDataMap[e]" [layout]="graphLayoutMap[e]" [updateOnLayoutChange]="true" [updateOnDataChange]="true"></plotly-plot>
+</div>
+
