@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {map, of, Subject} from "rxjs";
+import {map, of, Subject, tap} from "rxjs";
 import {AccessionMap, AccessionMapQuery} from "./accession-map";
 import {Sample, SampleQuery} from "./sample";
-import {MSDataQuery} from "./msdata";
-import {Modelling} from "./modelling-data";
+import {MSData, MSDataQuery} from "./msdata";
+import {Modelling, ModelParameters, ModelParametersQuery} from "./modelling-data";
+import {ToastService} from "./toast.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class WebService {
-
+  selectedMSDataID: number[] = []
   sampleMap: {[key: string]: Sample} = {}
   baseUrl = "http://localhost:8000"
   selectedSamples: string[] = []
@@ -25,11 +26,17 @@ export class WebService {
     "#fdcce5",
     "#8bd3c7",
   ]
+  currentColorPosition: number = 0
+
+
 
   colorMap: any = {}
 
   redrawSubject: Subject<boolean> = new Subject<boolean>()
-  constructor(private http: HttpClient) { }
+  modelParameters: ModelParameters[] = []
+  selectionSubject: Subject<boolean> = new Subject<boolean>()
+
+  constructor(private http: HttpClient, private toastService: ToastService) { }
 
   searchProtein(proteinGroup: string, distinct: boolean = true) {
     if (proteinGroup === "") {
@@ -75,8 +82,11 @@ export class WebService {
   }
 
   getMSData(proteinGroup: string) {
-    return this.http.get<MSDataQuery>(`${this.baseUrl}/api/turnoverdata/`, {responseType: 'json', observe: 'body', params: {Protein_Group: proteinGroup, page_size: 100000}}).pipe(
-      map((data: MSDataQuery) => {return data.results})
+    this.toastService.show("Loading", "Loading MS data of " + proteinGroup)
+    return this.http.get<MSData[]>(`${this.baseUrl}/api/turnoverdata/get_all_from_queryset/`, {responseType: 'json', observe: 'body', params: {Protein_Group: proteinGroup}}).pipe(tap((data: MSData[]) => {
+      this.toastService.show("Success", "Successfully retrieved MS data of " + proteinGroup)
+    }),
+      map((data: MSData[]) => {return data})
     )
   }
 
@@ -88,4 +98,44 @@ export class WebService {
     return this.http.post<Modelling[]>(`${this.baseUrl}/api/turnoverdata/get_modelling_data/`, {Data: data, ids: ids}, {responseType: 'json', observe: 'body'})
   }
 
+  getAllModelParameters() {
+    return this.http.get<ModelParametersQuery>(`${this.baseUrl}/api/modelparameters/`, {responseType: 'json', observe: 'body', params: {page_size: 100000}}).pipe(
+      map((data: ModelParametersQuery) => {return data.results})
+    )
+  }
+
+  selectionHandler(ids: number[]) {
+    const idsAdd = ids.filter((id) => {
+      return !this.selectedMSDataID.includes(id)
+    })
+    const idsRemove = ids.filter((id) => {
+      return this.selectedMSDataID.includes(id)
+    })
+    if (idsAdd.length > 0) {
+      this.selectedMSDataID.push(...idsAdd)
+    }
+    if (idsRemove.length > 0) {
+      this.selectedMSDataID = this.selectedMSDataID.filter((id) => {
+        return !idsRemove.includes(id)
+      })
+    }
+    if (idsAdd.length > 0 || idsRemove.length > 0) {
+      this.selectionSubject.next(true)
+      this.redrawSubject.next(true)
+    }
+  }
+
+  setPrecurorIDColor(precursorID: string, color: string = "") {
+    if (color === "") {
+      if (!(precursorID in this.colorMap)) {
+        this.colorMap[precursorID] = this.defaultColorList[this.currentColorPosition]
+        this.currentColorPosition += 1
+        if (this.currentColorPosition >= this.defaultColorList.length) {
+          this.currentColorPosition = 0
+        }
+      }
+    } else {
+      this.colorMap[precursorID] = color
+    }
+  }
 }

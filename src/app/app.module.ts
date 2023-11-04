@@ -24,6 +24,7 @@ import { ProteinModellingCollectionComponent } from './protein-modelling-collect
 import { ProteinModellingComponent } from './protein-modelling/protein-modelling.component';
 import { ProteinTauDistributionComponent } from './protein-tau-distribution/protein-tau-distribution.component';
 import { ProteinTauCollectionComponent } from './protein-tau-collection/protein-tau-collection.component';
+import { ToastComponent } from './toast/toast.component';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 @NgModule({
@@ -41,7 +42,8 @@ PlotlyModule.plotlyjs = PlotlyJS;
     ProteinModellingCollectionComponent,
     ProteinModellingComponent,
     ProteinTauDistributionComponent,
-    ProteinTauCollectionComponent
+    ProteinTauCollectionComponent,
+    ToastComponent
   ],
   imports: [
     BrowserModule,

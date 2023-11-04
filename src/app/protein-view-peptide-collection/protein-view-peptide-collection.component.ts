@@ -7,7 +7,7 @@ import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 @Component({
   selector: 'app-protein-view-peptide-collection',
   templateUrl: './protein-view-peptide-collection.component.html',
-  styleUrls: ['./protein-view-peptide-collection.component.sass']
+  styleUrls: ['./protein-view-peptide-collection.component.scss']
 })
 export class ProteinViewPeptideCollectionComponent {
   private _data: IDataFrame<number, MSData> = new DataFrame()

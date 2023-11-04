@@ -7,17 +7,27 @@
     </h2>
     <div #collapse="ngbCollapse" [(ngbCollapse)]="iscollapse">
       <div class="accordion-body">
-        <div class="form-group" style="width: 300px; padding: 20px">
-          <label for="tissues">Select tissues:</label>
-          <select id="tissues" class="form-control" [(ngModel)]="selectedTissues" (change)="updateGroupData()" multiple>
-            <option *ngFor="let t of tissues" [value]="t">
-              {{t}}
-            </option>
-          </select>
-        </div>
-        <div *ngIf="selectedTissues.length > 0">
+        <form [formGroup]="form">
+          <div class="flex-row gap-5">
+            <div class="form-group" style="width: 300px; padding: 20px">
+              <label for="tissues">Select tissues:</label>
+              <select id="tissues" class="form-control" formControlName="selectedTissues" multiple>
+                <option *ngFor="let t of tissues" [value]="t">
+                  {{t}}
+                </option>
+              </select>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" formControlName="hideNotSelected" type="checkbox" id="hideNotSelected">
+              <label class="form-check-label" for="hideNotSelected">Make not selected model transparent</label>
+            </div>
+          </div>
+
+        </form>
+
+        <div *ngIf="selectedTissues.length > 0 && !iscollapse">
           <div *ngFor="let t of groupData" style="padding: 20px">
-            <app-protein-modelling [data]="t"></app-protein-modelling>
+            <app-protein-modelling [data]="t" [hideNotSelected]="hideNotSelected"></app-protein-modelling>
           </div>
         </div>
       </div>

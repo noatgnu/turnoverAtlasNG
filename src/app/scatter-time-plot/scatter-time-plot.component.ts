@@ -5,7 +5,7 @@ import {WebService} from "../web.service";
 @Component({
   selector: 'app-scatter-time-plot',
   templateUrl: './scatter-time-plot.component.html',
-  styleUrls: ['./scatter-time-plot.component.sass']
+  styleUrls: ['./scatter-time-plot.component.scss']
 })
 export class ScatterTimePlotComponent {
   private _data: MSData|undefined
@@ -76,70 +76,76 @@ export class ScatterTimePlotComponent {
 
       let modelResult: any
       if (this._data.tau_POI !== null) {
-        try {
-          modelResult = await this.web.postModellingData(this._data.Tissue, this._data.Engine, this._data.tau_POI, this._data.tau_POI_upper_bound, this._data.tau_POI_lower_bound, days).toPromise()
-          const kpoolModel: any = {
-            x: [0],
-            y: [0],
-            mode: 'lines',
-            name: 'Kpool Model',
-            line: {
-              color: 'rgb(219, 64, 82)',
-              shape: 'spline',
-            }
+        const pulseModel: any = {
+          x: [0],
+          y: [0],
+          mode: 'lines',
+          name: 'Pulse Model',
+          line: {
+            color: 'rgb(55, 128, 191)',
+            shape: 'spline',
           }
-          const pulseModel: any = {
-            x: [0],
-            y: [0],
-            mode: 'lines',
-            name: 'Pulse Model',
-            line: {
-              color: 'rgb(55, 128, 191)',
-              shape: 'spline',
-            }
-          }
-          const uppderBound: any = {
-            x: [0],
-            y: [0],
-            mode: 'lines',
-            name: 'Pulse Model Upper Bound',
-            line: {
-              shape: 'spline',
-              color: 'rgb(155,41,113)',
-            }
-          }
-
-          const lowerBound: any = {
-            x: [0],
-            y: [0],
-            mode: 'lines',
-            name: 'Pulse Model Lower Bound',
-            line: {
-              shape: 'spline',
-              color: 'rgb(41,155,43)',
-            }
-          }
-
-          for (const i of modelResult.kpool) {
-            kpoolModel.x.push(i.day)
-            kpoolModel.y.push(i.value)
-          }
-          for (const i of modelResult.pulse) {
-            pulseModel.x.push(i.day)
-            pulseModel.y.push(i.value)
-            uppderBound.x.push(i.day)
-            uppderBound.y.push(i.tau_POI_upper_bound)
-            lowerBound.x.push(i.day)
-            lowerBound.y.push(i.tau_POI_lower_bound)
-          }
-          //graphData.push(kpoolModel)
-          graphData.push(pulseModel)
-          //graphData.push(uppderBound)
-          //graphData.push(lowerBound)
-          console.log(modelResult)
-        } catch (e) {
-          console.log(e)
         }
+        const uppderBound: any = {
+          x: [0],
+          y: [0],
+          mode: 'lines',
+          name: 'Pulse Model Upper Bound',
+          line: {
+            shape: 'spline',
+            color: 'rgb(155,41,113)',
+          }
+        }
+
+        const lowerBound: any = {
+          x: [0],
+          y: [0],
+          mode: 'lines',
+          name: 'Pulse Model Lower Bound',
+          line: {
+            shape: 'spline',
+            color: 'rgb(41,155,43)',
+          }
+        }
+
+        for (const i of this._data.tau_model) {
+          pulseModel.x.push(i.day)
+          pulseModel.y.push(i.value)
+          uppderBound.x.push(i.day)
+          uppderBound.y.push(i.tau_POI_upper_bound)
+          lowerBound.x.push(i.day)
+          lowerBound.y.push(i.tau_POI_lower_bound)
+        }
+        //graphData.push(kpoolModel)
+        graphData.push(pulseModel)
+        graphData.push(uppderBound)
+        graphData.push(lowerBound)
+
+        // try {
+        //   modelResult = await this.web.postModellingData(this._data.Tissue, this._data.Engine, this._data.tau_POI, this._data.tau_POI_upper_bound, this._data.tau_POI_lower_bound, days).toPromise()
+        //   const kpoolModel: any = {
+        //     x: [0],
+        //     y: [0],
+        //     mode: 'lines',
+        //     name: 'Kpool Model',
+        //     line: {
+        //       color: 'rgb(219, 64, 82)',
+        //       shape: 'spline',
+        //     }
+        //   }
+        //
+        //
+        //   for (const i of modelResult.kpool) {
+        //     kpoolModel.x.push(i.day)
+        //     kpoolModel.y.push(i.value)
+        //   }
+        //
+        //   //graphData.push(uppderBound)
+        //   //graphData.push(lowerBound)
+        //   console.log(modelResult)
+        // } catch (e) {
+        //   console.log(e)
+        // }
       }
 
       this.graphData = graphData

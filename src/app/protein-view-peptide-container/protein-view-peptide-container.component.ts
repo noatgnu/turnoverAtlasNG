@@ -4,7 +4,7 @@ import {MSData} from "../msdata";
 @Component({
   selector: 'app-protein-view-peptide-container',
   templateUrl: './protein-view-peptide-container.component.html',
-  styleUrls: ['./protein-view-peptide-container.component.sass']
+  styleUrls: ['./protein-view-peptide-container.component.scss']
 })
 export class ProteinViewPeptideContainerComponent {
   private _data: MSData|undefined = undefined

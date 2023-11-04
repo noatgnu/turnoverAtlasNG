@@ -14,7 +14,7 @@
         </div>
 
         <ng-template #combined>
-          <app-protein-tau-distribution [data]="data"></app-protein-tau-distribution>
+          <app-protein-tau-distribution [data]="data" *ngIf="!iscollapse"></app-protein-tau-distribution>
         </ng-template>
       </div>
     </div>

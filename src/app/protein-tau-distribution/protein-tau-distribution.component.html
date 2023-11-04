@@ -1,4 +1,12 @@
+<form [formGroup]="form" (ngSubmit)="updatePlot()">
+  <div class="form-check">
+    <input class="form-check-input" id="hideNotSelected" formControlName="hideNotSelected" type="checkbox">
+    <label for="hideNotSelected">Make not selected dot points transparent</label>
+  </div>
+  <button type="submit" class="btn btn-primary">Redraw</button>
+</form>
+
 <div *ngFor="let e of engineList">
-  <plotly-plot [data]="graphDataMap[e]" [layout]="graphLayoutMap[e]" [updateOnLayoutChange]="true" [updateOnDataChange]="true"></plotly-plot>
+  <plotly-plot (plotlyClick)="OnClick($event)" [data]="graphDataMap[e]" [layout]="graphLayoutMap[e]" [updateOnLayoutChange]="true" [updateOnDataChange]="true"></plotly-plot>
 </div>
 

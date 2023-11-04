@@ -1,0 +1,11 @@
+<ngb-toast
+  [ngClass]="toast.type === 'info' ? 'bg-primary text-light' : toast.type === 'success' ? 'bg-success text-light' : toast.type === 'warning' ? 'bg-warning text-light' : 'bg-danger text-light'" *ngFor="let toast of toastService.toasts" (hidden)="toastService.remove(toast)" [autohide]="true" [delay]="toast.delay">
+  <div class="d-flex">
+    <div class="p-2">
+      <b>{{toast.header}}: </b>{{toast.body}}
+    </div>
+    <div class="p-2">
+      <button type="button" class="btn btn-close" aria-label="Close" (click)="toastService.remove(toast)"></button>
+    </div>
+  </div>
+</ngb-toast>

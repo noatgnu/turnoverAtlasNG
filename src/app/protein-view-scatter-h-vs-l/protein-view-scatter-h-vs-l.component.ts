@@ -6,7 +6,7 @@ import {WebService} from "../web.service";
 @Component({
   selector: 'app-protein-view-scatter-h-vs-l',
   templateUrl: './protein-view-scatter-h-vs-l.component.html',
-  styleUrls: ['./protein-view-scatter-h-vs-l.component.sass']
+  styleUrls: ['./protein-view-scatter-h-vs-l.component.scss']
 })
 export class ProteinViewScatterHVsLComponent {
   private _data: IDataFrame<number, MSData> = new DataFrame()

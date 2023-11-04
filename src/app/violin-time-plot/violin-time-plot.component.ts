@@ -5,7 +5,7 @@ import {WebService} from "../web.service";
 @Component({
   selector: 'app-violin-time-plot',
   templateUrl: './violin-time-plot.component.html',
-  styleUrls: ['./violin-time-plot.component.sass']
+  styleUrls: ['./violin-time-plot.component.scss']
 })
 export class ViolinTimePlotComponent {
   private _data: MSDataValues[] = []

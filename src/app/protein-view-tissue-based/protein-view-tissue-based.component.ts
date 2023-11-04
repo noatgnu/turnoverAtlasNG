@@ -5,7 +5,7 @@ import {DataFrame, IDataFrame, ISeries, Series} from "data-forge";
 @Component({
   selector: 'app-protein-view-tissue-based',
   templateUrl: './protein-view-tissue-based.component.html',
-  styleUrls: ['./protein-view-tissue-based.component.sass']
+  styleUrls: ['./protein-view-tissue-based.component.scss']
 })
 export class ProteinViewTissueBasedComponent {
   iscollapse = false

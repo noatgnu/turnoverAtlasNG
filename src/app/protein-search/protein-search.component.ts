@@ -3,11 +3,12 @@ import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {DataFrame, IDataFrame} from "data-forge";
 import {MSData, MSDataValues} from "../msdata";
 import {WebService} from "../web.service";
+import {ToastService} from "../toast.service";
 
 @Component({
   selector: 'app-protein-search',
   templateUrl: './protein-search.component.html',
-  styleUrls: ['./protein-search.component.sass']
+  styleUrls: ['./protein-search.component.scss']
 })
 export class ProteinSearchComponent {
   tissues: string[] = []
@@ -52,11 +53,12 @@ export class ProteinSearchComponent {
   get data(): IDataFrame<number, MSData> {
     return this._data
   }
-  constructor(private fb: FormBuilder, public web: WebService) {
+  constructor(private fb: FormBuilder, public web: WebService, private toastService: ToastService) {
 
   }
 
   reloadData() {
+    this.toastService.show("Data formating", "Filtering data")
     this.filteredDF = this.data.where((row) => {
       return this.form.controls['tissues'].value.includes(row.Tissue) && this.form.controls['engines'].value.includes(row.Engine) && row.n_Samples >= this.form.controls['minSamplesDetected'].value && row.n_TimePoints >= this.form.controls['minTimepointsDetected'].value && this.checkIfDataIsDetectedInSelectedSamples(row.values)
     })

@@ -1,3 +1,4 @@
+import {ModellingData} from "./modelling-data";
 
 export interface MSDataQuery {
   next: string|null;
@@ -41,4 +42,5 @@ export interface MSData {
   Engine: string;
   Tissue: string;
   values: MSDataValues[];
+  tau_model: ModellingData[];
 }

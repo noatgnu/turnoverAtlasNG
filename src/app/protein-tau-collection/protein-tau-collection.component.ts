@@ -5,11 +5,11 @@ import {MSData} from "../msdata";
 @Component({
   selector: 'app-protein-tau-collection',
   templateUrl: './protein-tau-collection.component.html',
-  styleUrls: ['./protein-tau-collection.component.sass']
+  styleUrls: ['./protein-tau-collection.component.scss']
 })
 export class ProteinTauCollectionComponent {
   private _data: IDataFrame<number, MSData> = new DataFrame()
-  iscollapse: boolean = false
+  iscollapse: boolean = true
   @Input() set data(value : IDataFrame<number, MSData>) {
     this._data = value
     this.tissueGroupData = this._data.groupBy(row => row.Tissue).bake()
