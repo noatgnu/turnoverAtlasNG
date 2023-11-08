@@ -42,14 +42,14 @@ export class ViolinTimePlotComponent {
     let position = 0
 
     this._data.forEach((i) => {
-      if (this.web.selectedSamples.includes(i.Sample_Name)) {
+      if (this.web.settings.selectedSamples.includes(i.Sample_Name)) {
         if (i.Sample_H_over_HL !== null) {
-          if (!(temp[this.web.sampleMap[i.Sample_Name].Days])) {
-            temp[this.web.sampleMap[i.Sample_Name].Days] = {
+          if (!(temp[this.web.settings.sampleMap[i.Sample_Name].Days])) {
+            temp[this.web.settings.sampleMap[i.Sample_Name].Days] = {
               x: [],
               y: [],
               type: 'violin',
-              name: this.web.sampleMap[i.Sample_Name].Days,
+              name: this.web.settings.sampleMap[i.Sample_Name].Days,
               box: {
                 visible: true
               },
@@ -63,16 +63,16 @@ export class ViolinTimePlotComponent {
               },
               points: 'all',
             }
-            if (position >= this.web.defaultColorList.length) {
+            if (position >= this.web.settings.defaultColorList.length) {
               position = 0
             }
-            temp[this.web.sampleMap[i.Sample_Name].Days].fillcolor = this.web.defaultColorList[position]
+            temp[this.web.settings.sampleMap[i.Sample_Name].Days].fillcolor = this.web.settings.defaultColorList[position]
             position += 1
-            this.graphLayout.xaxis.tickvals.push(this.web.sampleMap[i.Sample_Name].Days)
-            this.graphLayout.xaxis.ticktext.push(this.web.sampleMap[i.Sample_Name].Days)
+            this.graphLayout.xaxis.tickvals.push(this.web.settings.sampleMap[i.Sample_Name].Days)
+            this.graphLayout.xaxis.ticktext.push(this.web.settings.sampleMap[i.Sample_Name].Days)
           }
-          temp[this.web.sampleMap[i.Sample_Name].Days].x.push(this.web.sampleMap[i.Sample_Name].Days)
-          temp[this.web.sampleMap[i.Sample_Name].Days].y.push(i.Sample_H_over_HL)
+          temp[this.web.settings.sampleMap[i.Sample_Name].Days].x.push(this.web.settings.sampleMap[i.Sample_Name].Days)
+          temp[this.web.settings.sampleMap[i.Sample_Name].Days].y.push(i.Sample_H_over_HL)
         }
       }
     })

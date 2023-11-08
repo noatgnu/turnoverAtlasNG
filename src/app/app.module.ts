@@ -25,6 +25,11 @@ import { ProteinModellingComponent } from './protein-modelling/protein-modelling
 import { ProteinTauDistributionComponent } from './protein-tau-distribution/protein-tau-distribution.component';
 import { ProteinTauCollectionComponent } from './protein-tau-collection/protein-tau-collection.component';
 import { ToastComponent } from './toast/toast.component';
+import { FloatingPanelsComponent } from './floating-panels/floating-panels.component';
+import {NgxColorsModule} from "ngx-colors";
+import { MergePromptComponent } from './merge-prompt/merge-prompt.component';
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import { CoveragePlotComponent } from './coverage-plot/coverage-plot.component';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 @NgModule({
@@ -43,14 +48,17 @@ PlotlyModule.plotlyjs = PlotlyJS;
     ProteinModellingComponent,
     ProteinTauDistributionComponent,
     ProteinTauCollectionComponent,
-    ToastComponent
+    ToastComponent,
+    FloatingPanelsComponent,
+    MergePromptComponent,
+    CoveragePlotComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    NgbModule,
-    PlotlyModule, HttpClientModule, FormsModule, ReactiveFormsModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        NgbModule,
+        PlotlyModule, HttpClientModule, FormsModule, ReactiveFormsModule, NgxColorsModule, BrowserAnimationsModule
+    ],
   providers: [
   ],
   bootstrap: [AppComponent]

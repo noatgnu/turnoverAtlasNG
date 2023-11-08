@@ -49,7 +49,7 @@ export class ProteinViewScatterHVsLComponent {
           type: 'scatter',
           marker: {
             size: 5,
-            color: this.web.colorMap[row.Engine]
+            color: this.web.settings.colorMap[row.Engine]
           },
           name: row.Engine
         }

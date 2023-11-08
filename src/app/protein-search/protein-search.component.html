@@ -53,7 +53,7 @@
         <div class="form-group" style="width: 300px">
           <label for="experiment">Sample Selection</label>
           <select id="experiment" formControlName="samples" multiple class="form-control">
-            <option *ngFor="let o of samples" [value]="o">{{o}} {{web.sampleMap[o].Sample_Label}} - day {{web.sampleMap[o].Days}} - rep {{web.sampleMap[o].Replicate}}</option>
+            <option *ngFor="let o of samples" [value]="o">{{o}} {{web.settings.sampleMap[o].Sample_Label}} - day {{web.settings.sampleMap[o].Days}} - rep {{web.settings.sampleMap[o].Replicate}}</option>
           </select>
           <small>Selected {{formExperimentParameters.value.samples.length}} samples</small>
         </div>

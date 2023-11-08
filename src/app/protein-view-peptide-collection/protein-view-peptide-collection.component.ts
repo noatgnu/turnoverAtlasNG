@@ -32,14 +32,7 @@ export class ProteinViewPeptideCollectionComponent {
   page:number = 1;
   pageSize: number = 10;
 
-  typeaheadModel: string = ""
-  search: OperatorFunction<string, readonly string[]> = (text$: Observable<string>) =>
-    text$.pipe(
-      debounceTime(200),
-      distinctUntilChanged(),
-      map(term => term.length < 1 ? []
-        : this.precursorID.filter(v => v.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10))
-    )
+
 
   form: FormGroup = this.fb.group({
     filterPrecursorID: new FormControl<string>(""),

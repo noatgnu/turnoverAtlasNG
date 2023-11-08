@@ -3,6 +3,7 @@ import {DataFrame, IDataFrame} from "data-forge";
 import {Modelling} from "../modelling-data";
 import {WebService} from "../web.service";
 import {MSData} from "../msdata";
+import {ToastService} from "../toast.service";
 
 @Component({
   selector: 'app-protein-modelling',
@@ -12,6 +13,7 @@ import {MSData} from "../msdata";
 export class ProteinModellingComponent {
   private _data: IDataFrame<number, MSData> = new DataFrame()
   private _hideNotSelected: boolean = false
+  revision: number = 0
   @Input()  set hideNotSelected(value: boolean) {
     this._hideNotSelected = value
     this.drawModel()
@@ -49,7 +51,7 @@ export class ProteinModellingComponent {
 
   engines: string[] = []
 
-  constructor(private web: WebService) {
+  constructor(private web: WebService, private toasts: ToastService) {
     this.web.redrawSubject.subscribe(() => {
       this.drawModel()
     })
@@ -86,38 +88,54 @@ export class ProteinModellingComponent {
       }
 
       for (const i of group) {
-        const temp: any = {
-          x: i.tau_model.map((x) => {
-            return x.day
-          }),
-          y: i.tau_model.map((x) => {
-            return x.value
-          }),
-          mode: 'lines',
-          data: i.id,
-          name: i.Precursor_Id,
-          line: {
-            color: "rgba(140,140,140,0.13)",
-            shape: 'spline',
-          },
-          showlegend: false,
-          hovertemplate: "Day: %{x}<br>Value: %{y}<br>"+i.Precursor_Id
-        }
-
-        if (this.web.selectedMSDataID.includes(i.id)) {
-          temp.line.color = this.web.colorMap[i.Precursor_Id].slice()
+        if (this.web.settings.searchMap[i.id]) {
+          const temp: any = {
+            x: i.tau_model.map((x) => {
+              return x.day
+            }),
+            y: i.tau_model.map((x) => {
+              return x.value
+            }),
+            mode: 'lines',
+            data: i.id,
+            name: i.Precursor_Id,
+            line: {
+              color: this.web.settings.colorMap[this.web.settings.searchMap[i.id][this.web.settings.searchMap[i.id].length -1]].slice(),
+              shape: 'spline',
+            },
+            showlegend: false,
+            hovertemplate: "Day: %{x}<br>Value: %{y}<br>"+i.Precursor_Id
+          }
+          graphDataMap[group.first().Engine].push(temp)
         } else {
+          const temp: any = {
+            x: i.tau_model.map((x) => {
+              return x.day
+            }),
+            y: i.tau_model.map((x) => {
+              return x.value
+            }),
+            mode: 'lines',
+            data: i.id,
+            name: i.Precursor_Id,
+            line: {
+              color: "rgba(140,140,140,0.13)",
+              shape: 'spline',
+            },
+            showlegend: false,
+            hovertemplate: "Day: %{x}<br>Value: %{y}<br>"+i.Precursor_Id
+          }
           if (this.hideNotSelected) {
             temp.line.color = "rgba(140,140,140,0)"
           }
+          graphDataMap[group.first().Engine].push(temp)
         }
-
-        graphDataMap[group.first().Engine].push(temp)
       }
     })
     this.graphDataMap = graphDataMap
     this.graphLayoutMap = graphLayoutMap
     this.engines = Object.keys(graphDataMap)
+    this.revision += 1
   }
 
   OnClick(event: any) {
@@ -126,15 +144,27 @@ export class ProteinModellingComponent {
         const precursorIds: string[] = []
         for (const i of event.points) {
           precursorIds.push(i.data.name)
-          this.web.setPrecurorIDColor(i.data.name)
+          this.web.setOperationColor(i.data.name)
+          this.web.settings.searchOperations.push(i.data.name)
         }
-        const ids= this.data.where((row) => {
+        const data= this.data.where((row) => {
             return precursorIds.includes(row.Precursor_Id)
-        }).bake().getSeries("id").toArray().map((x) => {return x as number})
+        }).bake()
 
-        if (ids.length > 0) {
-            this.web.selectionHandler(ids)
+      const ids: number[] = []
+      data.forEach((row) => {
+        ids.push(row.id)
+        if (!this.web.settings.searchMap[row.id]) {
+          this.web.settings.searchMap[row.id] = []
         }
+        if (!this.web.settings.searchMap[row.id].includes(row.Precursor_Id)) {
+          this.web.settings.searchMap[row.id].push(row.Precursor_Id)
+        }
+      })
+
+      if (ids.length > 0) {
+          this.web.selectionHandler(ids)
+      }
     }
   }
 }

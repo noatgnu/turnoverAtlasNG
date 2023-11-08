@@ -15,7 +15,7 @@ export class AppComponent {
       (data) => {
         this.toastService.show('Initialization', 'Loading sample metadata and model parameters...')
         for (const s of data[0]) {
-          this.web.sampleMap[s.Sample_Name] = s
+          this.web.settings.sampleMap[s.Sample_Name] = s
         }
         this.web.modelParameters = data[1]
         this.ready = true

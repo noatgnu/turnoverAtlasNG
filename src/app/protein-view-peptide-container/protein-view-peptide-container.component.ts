@@ -1,5 +1,6 @@
 import {Component, Input} from '@angular/core';
 import {MSData} from "../msdata";
+import {WebService} from "../web.service";
 
 @Component({
   selector: 'app-protein-view-peptide-container',
@@ -16,5 +17,5 @@ export class ProteinViewPeptideContainerComponent {
     return this._data
   }
 
-  constructor() { }
+  constructor(public web: WebService) { }
 }

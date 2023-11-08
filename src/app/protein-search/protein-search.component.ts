@@ -36,17 +36,17 @@ export class ProteinSearchComponent {
     this.form.controls['tissues'].setValue(this.tissues)
     this.form.controls['engines'].setValue(this.engines)
     // assign color to engines
-    for (let i = 0; i < this.engines.length; i++) {
-      const position = i%this.web.defaultColorList.length
-      if (this.web.colorMap[this.engines[position]] === undefined) {
-        this.web.colorMap[this.engines[position]] = this.web.defaultColorList[position]
-      }
-    }
-    this.samples = Object.keys(this.web.sampleMap).sort()
+    // for (let i = 0; i < this.engines.length; i++) {
+    //   const position = i%this.web.defaultColorList.length
+    //   if (this.web.colorMap[this.engines[position]] === undefined) {
+    //     this.web.colorMap[this.engines[position]] = this.web.defaultColorList[position]
+    //   }
+    // }
+    this.samples = Object.keys(this.web.settings.sampleMap).sort()
     this.formExperimentParameters.controls['samples'].setValue(this.samples.filter((s) => {
-      return this.web.sampleMap[s].Sample_Label === "pulse"
+      return this.web.settings.sampleMap[s].Sample_Label === "pulse"
     }))
-    this.web.selectedSamples = this.formExperimentParameters.controls['samples'].value
+    this.web.settings.selectedSamples = this.formExperimentParameters.controls['samples'].value
     this.reloadData()
   }
   @Output() filteredData: EventEmitter<IDataFrame<number, MSData>> = new EventEmitter<IDataFrame<number, MSData>>()
@@ -54,7 +54,14 @@ export class ProteinSearchComponent {
     return this._data
   }
   constructor(private fb: FormBuilder, public web: WebService, private toastService: ToastService) {
+    this.web.restoreSubject.asObservable().subscribe((data) => {
+      if (data) {
+        this.form.patchValue(this.web.settings.form)
+        this.formExperimentParameters.patchValue(this.web.settings.formExperimentParameters)
+        this.reloadData()
+      }
 
+    })
   }
 
   reloadData() {
@@ -68,9 +75,9 @@ export class ProteinSearchComponent {
       })
     }
     this.filteredDF = this.filteredDF.bake()
+    this.web.settings.form = this.form.value
+    this.web.settings.formExperimentParameters = this.formExperimentParameters.value
     this.filteredData.emit(this.filteredDF)
-    console.log(this.filteredDF)
-    console.log(this.data)
   }
 
   reset() {
@@ -79,13 +86,13 @@ export class ProteinSearchComponent {
   }
 
   updateSelection() {
-    this.web.selectedSamples = this.formExperimentParameters.controls['samples'].value
+    this.web.settings.selectedSamples = this.formExperimentParameters.controls['samples'].value
     this.web.redrawSubject.next(true)
   }
 
   checkIfDataIsDetectedInSelectedSamples(values: MSDataValues[]) {
     for (const v of values) {
-      if (this.web.selectedSamples.includes(v.Sample_Name)) {
+      if (this.web.settings.selectedSamples.includes(v.Sample_Name)) {
         if (v.Sample_H_over_HL !== null) {
           return true
         }
@@ -93,4 +100,5 @@ export class ProteinSearchComponent {
     }
     return false
   }
+
 }

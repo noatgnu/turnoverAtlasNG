@@ -5,6 +5,7 @@ import {MSData, MSDataValues} from "../msdata";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Modelling} from "../modelling-data";
 import {ToastService} from "../toast.service";
+import {SequenceCoverage} from "../sequence-coverage";
 
 @Component({
   selector: 'app-protein-view',
@@ -28,13 +29,19 @@ export class ProteinViewComponent {
   modellingData: IDataFrame<number, Modelling> = new DataFrame()
   //modellingDataGroup: ISeries<number, IDataFrame<number, Modelling>> = new Series()
   modellingDataGroup: ISeries<number, IDataFrame<number, MSData>> = new Series()
-
+  coverageData: SequenceCoverage|undefined = undefined
   @Input() set proteinGroup(value: string) {
     this.protein = value
     this.web.getMSData(this.protein).subscribe((data) => {
       this.df = new DataFrame(data)
-
+      console.log(this.df)
     })
+    for (const i of value.split(",")) {
+
+      this.web.getCoverageData(i).subscribe((data) => {
+        this.coverageData = data
+      })
+    }
   }
 
 
@@ -50,12 +57,12 @@ export class ProteinViewComponent {
 
     const ids: number[] = value.getSeries("id").bake().toArray()
     const days: number[] = []
-    for (const s of this.web.selectedSamples) {
-      if (!days.includes(this.web.sampleMap[s].Days)) {
-        days.push(this.web.sampleMap[s].Days)
+    for (const s of this.web.settings.selectedSamples) {
+      if (!days.includes(this.web.settings.sampleMap[s].Days)) {
+        days.push(this.web.settings.sampleMap[s].Days)
       }
     }
-    console.log(ids, days)
+
     if (days.length > 0 && ids.length > 0) {
       this.toastService.show("Data formating", "Grouping data by tissue")
       this.modellingDataGroup = this.filteredData.where((row) => {

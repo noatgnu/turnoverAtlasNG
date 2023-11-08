@@ -52,4 +52,23 @@ export class NavbarComponent {
   searchData() {
     this.router.navigate(['protein-view', this.proteinSearchModel]).then(r => console.log(r))
   }
+
+  save() {
+    this.web.settings.download()
+  }
+
+  loadSettingFromFile(event: any) {
+    if ("target" in event && "files" in event.target && event.target.files.length > 0) {
+      const file = event.target.files[0]
+        const reader = new FileReader()
+        reader.onload = (e) => {
+          if (e.target) {
+            const target = e.target as FileReader
+            this.web.settings.import(JSON.parse(target.result as string))
+            this.web.restoreSubject.next(true)
+          }
+        }
+        reader.readAsText(file)
+    }
+  }
 }

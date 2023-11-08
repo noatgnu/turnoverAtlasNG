@@ -18,6 +18,7 @@ export class ProteinTauDistributionComponent {
   get data(): IDataFrame<number, MSData> {
     return this._data
   }
+  revision: number = 0
   graphDataMap: any = {}
   graphLayoutBase: any = {
     title: "",
@@ -81,8 +82,10 @@ export class ProteinTauDistributionComponent {
       }
       temp[row.Engine][row.Tissue].x.push(row.Tissue)
       temp[row.Engine][row.Tissue].y.push(Math.log2(row.tau_POI))
-      if (this.web.selectedMSDataID.includes(row.id)) {
-        temp[row.Engine][row.Tissue].marker.color.push(this.web.colorMap[row.Precursor_Id].slice())
+      if (this.web.settings.selectedMSDataID.includes(row.id)) {
+        if (this.web.settings.searchMap[row.id]) {
+            temp[row.Engine][row.Tissue].marker.color.push(this.web.settings.colorMap[this.web.settings.searchMap[row.id][this.web.settings.searchMap[row.id].length-1]].slice())
+        }
       } else {
         if (this.form.value.hideNotSelected) {
           temp[row.Engine][row.Tissue].marker.color.push("rgba(140,140,140,0)")
@@ -103,6 +106,7 @@ export class ProteinTauDistributionComponent {
       }
     }
     this.engineList = Object.keys(this.graphLayoutMap)
+    this.revision += 1
   }
 
   OnClick(event: any) {
@@ -110,15 +114,31 @@ export class ProteinTauDistributionComponent {
     if ("points" in event) {
       const selectedData: string[] = []
       for (const point of event.points) {
-        selectedData.push(point.data.text[point.pointNumber])
-        this.web.setPrecurorIDColor(point.data.text[point.pointNumber])
-      }
-      const ids = this.data.where((row) => {
-        return selectedData.includes(row.Precursor_Id)
-      }).bake().getSeries("id").toArray().map((x) => {return x as number})
+        if (!("hoverOnBox" in point)) {
+          selectedData.push(point.data.text[point.pointNumber])
 
+          this.web.setOperationColor(point.data.text[point.pointNumber])
+          this.web.settings.searchOperations.push(point.data.text[point.pointNumber])
+        }
+
+      }
       if (selectedData.length > 0) {
-        this.web.selectionHandler(ids)
+        const data= this.data.where((row) => {
+          return selectedData.includes(row.Precursor_Id)
+        }).bake()
+        const ids: number[] = []
+        data.forEach((row) => {
+          ids.push(row.id)
+          if (!this.web.settings.searchMap[row.id]) {
+            this.web.settings.searchMap[row.id] = []
+          }
+          if (!this.web.settings.searchMap[row.id].includes(row.Precursor_Id)) {
+            this.web.settings.searchMap[row.id].push(row.Precursor_Id)
+          }
+        })
+        if (ids.length > 0) {
+          this.web.selectionHandler(ids)
+        }
       }
     }
   }

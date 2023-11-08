@@ -51,16 +51,16 @@ export class ScatterTimePlotComponent {
         },
       }
       for (const i of this._data.values) {
-        if (this.web.selectedSamples.includes(i.Sample_Name)) {
+        if (this.web.settings.selectedSamples.includes(i.Sample_Name)) {
 
           if (i.Sample_H_over_HL !== null) {
-            temp.x.push(this.web.sampleMap[i.Sample_Name].Days)
+            temp.x.push(this.web.settings.sampleMap[i.Sample_Name].Days)
             temp.y.push(i.Sample_H_over_HL)
-            if (!days.includes(this.web.sampleMap[i.Sample_Name].Days)) {
-              days.push(this.web.sampleMap[i.Sample_Name].Days)
-              daysMap[this.web.sampleMap[i.Sample_Name].Days] = []
+            if (!days.includes(this.web.settings.sampleMap[i.Sample_Name].Days)) {
+              days.push(this.web.settings.sampleMap[i.Sample_Name].Days)
+              daysMap[this.web.settings.sampleMap[i.Sample_Name].Days] = []
             }
-            daysMap[this.web.sampleMap[i.Sample_Name].Days].push(i.Sample_H_over_HL)
+            daysMap[this.web.settings.sampleMap[i.Sample_Name].Days].push(i.Sample_H_over_HL)
           }
         }
       }

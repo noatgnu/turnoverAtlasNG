@@ -6,35 +6,22 @@ import {Sample, SampleQuery} from "./sample";
 import {MSData, MSDataQuery} from "./msdata";
 import {Modelling, ModelParameters, ModelParametersQuery} from "./modelling-data";
 import {ToastService} from "./toast.service";
+import {DataFrame, IDataFrame} from "data-forge";
+import {Settings} from "./settings";
+import {SequenceCoverage} from "./sequence-coverage";
 
 @Injectable({
   providedIn: 'root'
 })
 export class WebService {
-  selectedMSDataID: number[] = []
-  sampleMap: {[key: string]: Sample} = {}
+  settings: Settings = new Settings()
   baseUrl = "http://localhost:8000"
-  selectedSamples: string[] = []
-  defaultColorList: string[] = [
-    "#fd7f6f",
-    "#7eb0d5",
-    "#b2e061",
-    "#bd7ebe",
-    "#ffb55a",
-    "#ffee65",
-    "#beb9db",
-    "#fdcce5",
-    "#8bd3c7",
-  ]
-  currentColorPosition: number = 0
-
-
-
-  colorMap: any = {}
 
   redrawSubject: Subject<boolean> = new Subject<boolean>()
   modelParameters: ModelParameters[] = []
   selectionSubject: Subject<boolean> = new Subject<boolean>()
+  restoreSubject: Subject<boolean> = new Subject<boolean>()
+  filteredDF: IDataFrame<number, MSData> = new DataFrame()
 
   constructor(private http: HttpClient, private toastService: ToastService) { }
 
@@ -106,36 +93,92 @@ export class WebService {
 
   selectionHandler(ids: number[]) {
     const idsAdd = ids.filter((id) => {
-      return !this.selectedMSDataID.includes(id)
-    })
-    const idsRemove = ids.filter((id) => {
-      return this.selectedMSDataID.includes(id)
+      return !this.settings.selectedMSDataID.includes(id)
     })
     if (idsAdd.length > 0) {
-      this.selectedMSDataID.push(...idsAdd)
+      this.settings.selectedMSDataID.push(...idsAdd)
     }
-    if (idsRemove.length > 0) {
-      this.selectedMSDataID = this.selectedMSDataID.filter((id) => {
-        return !idsRemove.includes(id)
-      })
-    }
-    if (idsAdd.length > 0 || idsRemove.length > 0) {
-      this.selectionSubject.next(true)
-      this.redrawSubject.next(true)
-    }
+    // const idsRemove = ids.filter((id) => {
+    //   return this.selectedMSDataID.includes(id)
+    // })
+    //
+    // if (idsRemove.length > 0) {
+    //   this.selectedMSDataID = this.selectedMSDataID.filter((id) => {
+    //     return !idsRemove.includes(id)
+    //   })
+    // }
+    // if (idsAdd.length > 0 || idsRemove.length > 0) {
+    //
+    // }
+    this.selectionSubject.next(true)
+    this.redrawSubject.next(true)
   }
 
-  setPrecurorIDColor(precursorID: string, color: string = "") {
+  setOperationColor(precursorID: string, color: string = "") {
     if (color === "") {
-      if (!(precursorID in this.colorMap)) {
-        this.colorMap[precursorID] = this.defaultColorList[this.currentColorPosition]
-        this.currentColorPosition += 1
-        if (this.currentColorPosition >= this.defaultColorList.length) {
-          this.currentColorPosition = 0
+      if (!(precursorID in this.settings.colorMap)) {
+        this.settings.colorMap[precursorID] = this.settings.defaultColorList[this.settings.currentColorPosition]
+        this.settings.currentColorPosition += 1
+        if (this.settings.currentColorPosition >= this.settings.defaultColorList.length) {
+          this.settings.currentColorPosition = 0
         }
       }
     } else {
-      this.colorMap[precursorID] = color
+      this.settings.colorMap[precursorID] = color
     }
+  }
+
+  removeSearchOperation(operation: string) {
+    this.settings.searchOperations = this.settings.searchOperations.filter((op) => {
+      return op !== operation
+    })
+    delete this.settings.colorMap[operation]
+    for (const i in this.settings.searchMap) {
+      this.settings.searchMap[i] = this.settings.searchMap[i].filter((op: string) => {
+        return op !== operation
+      })
+      if (this.settings.searchMap[i].length === 0) {
+        delete this.settings.searchMap[i]
+        this.settings.selectedMSDataID = this.settings.selectedMSDataID.filter((id: number) => {
+          return id !== parseInt(i)
+        })
+      }
+    }
+  }
+
+  mergeSearchOperations(operations: string[], color: string="", newOperationName: string = "", removeOld: boolean = true) {
+    if (operations.length > 1) {
+      if (newOperationName === "") {
+        newOperationName = operations.join("_")
+      }
+      this.settings.searchOperations.push(newOperationName)
+      for (const i in this.settings.searchMap) {
+        let found = false
+        for (const j of operations) {
+            if (this.settings.searchMap[i].includes(j)) {
+              found = true
+              break
+            }
+        }
+        if (found) {
+            if (removeOld) {
+                this.settings.searchMap[i] = this.settings.searchMap[i].filter((op: string) => {
+                return !operations.includes(op)
+                })
+            }
+            this.settings.searchMap[i].push(newOperationName)
+        }
+      }
+      this.setOperationColor(newOperationName, color)
+    }
+    if (removeOld) {
+      for (const i of operations) {
+        delete this.settings.colorMap[i]
+      }
+    }
+  }
+
+  getCoverageData(proteinGroup: string, valid_tau: boolean = true) {
+    return this.http.get<SequenceCoverage>(`${this.baseUrl}/api/proteinsequence/get_coverage/`, {responseType: 'json', observe: 'body', params: {AccessionID: proteinGroup, valid_tau: valid_tau}}).pipe()
   }
 }

@@ -4,9 +4,14 @@
   <div class="col-3">
     <div class="card">
       <div class="card-body">
-        <b class="card-title">
+        <b class="card-title" *ngIf="web.settings.colorMap[data.Precursor_Id]; else normal" [ngStyle]="{'color': web.settings.colorMap[data.Precursor_Id]}">
           {{data.Precursor_Id}}
         </b>
+        <ng-template #normal>
+          <b class="card-title">
+            {{data.Precursor_Id}}
+          </b>
+        </ng-template>
         <p>
           Proteotypic: {{data.Proteotypic}} <br>
           Strip Sequence: {{data.Stripped_Sequence}} <br>
@@ -36,3 +41,5 @@
   </div>
 
 </div>
+
+

@@ -7,6 +7,6 @@
 </form>
 
 <div *ngFor="let e of engineList">
-  <plotly-plot (plotlyClick)="OnClick($event)" [data]="graphDataMap[e]" [layout]="graphLayoutMap[e]" [updateOnLayoutChange]="true" [updateOnDataChange]="true"></plotly-plot>
+  <plotly-plot (plotlyClick)="OnClick($event)" [data]="graphDataMap[e]" [layout]="graphLayoutMap[e]" [revision]="revision"></plotly-plot>
 </div>
 

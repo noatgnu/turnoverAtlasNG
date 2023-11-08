@@ -1,35 +1,52 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top d-lex flex-wrap">
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top d-flex flex-wrap">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">
       Turnover Atlas
     </a>
-    <form class="d-flex" (ngSubmit)="searchData()" style="gap: 20px">
-      <input
-        [resultTemplate]="rt"
-        [editable]="false"
-        placement="left-top"
-        [class.is-invalid]="searchFailed"
-        [(ngModel)]="proteinSearchModel"
-        [ngbTypeahead]="search"
-        [ngModelOptions]="{standalone: true}"
-        class="form-control me-2"
-        type="search"
-        placeholder="Search Term"
-        aria-label="Search">
-      <div class="form-group">
-        <select [(ngModel)]="searchType" [ngModelOptions]="{standalone: true}" class="form-control" id="selectionType">
-          <option value="Protein_Group">
-            Protein Group
-          </option>
-          <option value="Genes">
-            Gene
-          </option>
-        </select>
+    <div class="d-flex flex-row gap-1">
+      <form class="d-flex" (ngSubmit)="searchData()" style="gap: 20px">
+        <input
+                [resultTemplate]="rt"
+                [editable]="false"
+                placement="left-top"
+                [class.is-invalid]="searchFailed"
+                [(ngModel)]="proteinSearchModel"
+                [ngbTypeahead]="search"
+                [ngModelOptions]="{standalone: true}"
+                class="form-control me-2"
+                type="search"
+                placeholder="Search Term"
+                aria-label="Search">
+        <div class="form-group">
+          <select [(ngModel)]="searchType" [ngModelOptions]="{standalone: true}" class="form-control" id="selectionType">
+            <option value="Protein_Group">
+              Protein Group
+            </option>
+            <option value="Genes">
+              Gene
+            </option>
+          </select>
+        </div>
+        <button class="btn btn-outline-dark" type="submit"><i class="bi bi-search"></i></button>
+      </form>
+      <div>
+        <div display="dynamic" ngbDropdown class="d-inline-block">
+          <button class="btn btn-outline-primary ml-2" id="dropdownSession" ngbDropdownToggle>
+            Session
+          </button>
+          <div ngbDropdownMenu aria-labelledby="dropdownSession">
+            <button ngbDropdownItem (click)="save()">Session Save</button>
+            <button ngbDropdownItem (click)="loadSettings.click()">Session Load</button>
+          </div>
+        </div>
       </div>
-      <button class="btn btn-outline-dark" type="submit"><i class="bi bi-search"></i></button>
-    </form>
+    </div>
+
+
   </div>
 </nav>
+
+<input type="file" id="file" (change)="loadSettingFromFile($event)" style="display: none" accept=".json" #loadSettings>
 
 <ng-template #rt let-r="result" let-t="term">
   <ngb-highlight [result]="resultFormatter(r, t)" [term]="t"></ngb-highlight> - ({{r.split(";").length}} Shared)
