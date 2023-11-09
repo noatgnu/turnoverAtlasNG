@@ -30,6 +30,7 @@ import {NgxColorsModule} from "ngx-colors";
 import { MergePromptComponent } from './merge-prompt/merge-prompt.component';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import { CoveragePlotComponent } from './coverage-plot/coverage-plot.component';
+import { VariantSelectorComponent } from './variant-selector/variant-selector.component';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 @NgModule({
@@ -51,7 +52,8 @@ PlotlyModule.plotlyjs = PlotlyJS;
     ToastComponent,
     FloatingPanelsComponent,
     MergePromptComponent,
-    CoveragePlotComponent
+    CoveragePlotComponent,
+    VariantSelectorComponent
   ],
     imports: [
         BrowserModule,

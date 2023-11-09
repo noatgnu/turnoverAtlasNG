@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import {catchError, debounceTime, distinctUntilChanged, Observable, of, OperatorFunction, switchMap, tap} from "rxjs";
 import {WebService} from "../web.service";
 import {Router} from "@angular/router";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {VariantSelectorComponent} from "../variant-selector/variant-selector.component";
 
 @Component({
   selector: 'app-navbar',
@@ -46,11 +48,26 @@ export class NavbarComponent {
     }
   }
 
-  constructor(private web: WebService, private router: Router) {
+  constructor(private web: WebService, private router: Router, private modal: NgbModal) {
   }
 
   searchData() {
-    this.router.navigate(['protein-view', this.proteinSearchModel]).then(r => console.log(r))
+    if (this.searchType === "Protein_Group") {
+      this.router.navigate(['protein-view', this.proteinSearchModel]).then(r => console.log(r))
+    } else {
+      this.web.getExactAccFromGene(this.proteinSearchModel).subscribe((data: string[]) => {
+        console.log(data)
+        const ref = this.modal.open(VariantSelectorComponent)
+        ref.componentInstance.data = data
+        ref.closed.subscribe((result: string) => {
+          console.log(result)
+            if (result) {
+                this.router.navigate(['protein-view', result]).then(r => console.log(r))
+            }
+        })
+      })
+    }
+
   }
 
   save() {

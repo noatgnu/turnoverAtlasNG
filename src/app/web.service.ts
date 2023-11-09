@@ -181,4 +181,8 @@ export class WebService {
   getCoverageData(proteinGroup: string, valid_tau: boolean = true) {
     return this.http.get<SequenceCoverage>(`${this.baseUrl}/api/proteinsequence/get_coverage/`, {responseType: 'json', observe: 'body', params: {AccessionID: proteinGroup, valid_tau: valid_tau}}).pipe()
   }
+
+  getExactAccFromGene(gene: string) {
+    return this.http.get<string[]>(`${this.baseUrl}/api/accessionmap/get_exact_accession_id_from_genes/`, {responseType: 'json', observe: 'body', params: {genes: gene}})
+  }
 }

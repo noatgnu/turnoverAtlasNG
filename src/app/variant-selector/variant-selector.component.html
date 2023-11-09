@@ -1,0 +1,17 @@
+<div class="modal-header">
+    <h4 class="modal-title">Isoform Selector</h4>
+</div>
+<div class="modal-body">
+    <form>
+        <div class="form-group">
+            <label for="isoform-selector">Select Isoform</label>
+            <select class="form-control" id="isoform-selector" [(ngModel)]="selectedData" [ngModelOptions]="{standalone: true}">
+                <option *ngFor="let d of data" [value]="d">{{d}}</option>
+            </select>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" (click)="cancel()">Cancel</button>
+    <button type="button" class="btn btn-primary" (click)="submit()">Proceed</button>
+</div>
