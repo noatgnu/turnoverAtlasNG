@@ -9,20 +9,21 @@ import {ToastService} from "./toast.service";
 import {DataFrame, IDataFrame} from "data-forge";
 import {Settings} from "./settings";
 import {SequenceCoverage} from "./sequence-coverage";
+import {environment} from "../environments/environment";
 
 @Injectable({
   providedIn: 'root'
 })
 export class WebService {
   settings: Settings = new Settings()
-  baseUrl = "http://localhost:8000"
+  baseUrl = environment.baseUrl
 
   redrawSubject: Subject<boolean> = new Subject<boolean>()
   modelParameters: ModelParameters[] = []
   selectionSubject: Subject<boolean> = new Subject<boolean>()
   restoreSubject: Subject<boolean> = new Subject<boolean>()
   filteredDF: IDataFrame<number, MSData> = new DataFrame()
-
+  initializeModelParameters: Subject<boolean> = new Subject<boolean>()
   constructor(private http: HttpClient, private toastService: ToastService) { }
 
   searchProtein(proteinGroup: string, distinct: boolean = true) {

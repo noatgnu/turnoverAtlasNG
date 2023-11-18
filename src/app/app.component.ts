@@ -9,8 +9,14 @@ import {forkJoin} from "rxjs";
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  ready: boolean = false
   constructor(private web: WebService, private toastService: ToastService) {
+    this.initialize()
+    this.web.initializeModelParameters.asObservable().subscribe(data => {
+      this.initialize()
+    })
+  }
+
+  initialize() {
     forkJoin([ this.web.getSampleMetadata(), this.web.getAllModelParameters()]).subscribe(
       (data) => {
         this.toastService.show('Initialization', 'Loading sample metadata and model parameters...')
@@ -18,7 +24,8 @@ export class AppComponent {
           this.web.settings.sampleMap[s.Sample_Name] = s
         }
         this.web.modelParameters = data[1]
-        this.ready = true
+      }, (error) => {
+        this.toastService.show('Initialization', 'Error loading sample metadata and model parameters. Please log in.')
       }
     )
   }

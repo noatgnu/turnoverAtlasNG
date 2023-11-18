@@ -8,7 +8,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import * as PlotlyJS from 'plotly.js-dist-min';
 import { PlotlyModule } from 'angular-plotly.js';
-import {HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import { ProteinSearchComponent } from './protein-search/protein-search.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
@@ -31,6 +31,8 @@ import { MergePromptComponent } from './merge-prompt/merge-prompt.component';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import { CoveragePlotComponent } from './coverage-plot/coverage-plot.component';
 import { VariantSelectorComponent } from './variant-selector/variant-selector.component';
+import { HomeComponent } from './home/home.component';
+import {AuthInterceptor} from "./auth.interceptor";
 
 PlotlyModule.plotlyjs = PlotlyJS;
 @NgModule({
@@ -53,7 +55,8 @@ PlotlyModule.plotlyjs = PlotlyJS;
     FloatingPanelsComponent,
     MergePromptComponent,
     CoveragePlotComponent,
-    VariantSelectorComponent
+    VariantSelectorComponent,
+    HomeComponent
   ],
     imports: [
         BrowserModule,
@@ -62,6 +65,7 @@ PlotlyModule.plotlyjs = PlotlyJS;
         PlotlyModule, HttpClientModule, FormsModule, ReactiveFormsModule, NgxColorsModule, BrowserAnimationsModule
     ],
   providers: [
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
   ],
   bootstrap: [AppComponent]
 })

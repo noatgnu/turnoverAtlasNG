@@ -4,7 +4,7 @@
       Turnover Atlas
     </a>
     <div class="d-flex flex-row gap-1">
-      <form class="d-flex" (ngSubmit)="searchData()" style="gap: 20px">
+      <form class="d-flex" (ngSubmit)="searchData()" style="gap: 20px" *ngIf="accounts.loggedIn">
         <input
                 [resultTemplate]="rt"
                 [editable]="false"
@@ -18,7 +18,7 @@
                 placeholder="Search Term"
                 aria-label="Search">
         <div class="form-group">
-          <select [(ngModel)]="searchType" [ngModelOptions]="{standalone: true}" class="form-control" id="selectionType">
+          <select [(ngModel)]="searchType" [ngModelOptions]="{standalone: true}" class="form-control" id="selectionType" style="width: 150px">
             <option value="Protein_Group">
               Protein Group
             </option>

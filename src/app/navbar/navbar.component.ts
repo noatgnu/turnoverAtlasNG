@@ -4,6 +4,8 @@ import {WebService} from "../web.service";
 import {Router} from "@angular/router";
 import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {VariantSelectorComponent} from "../variant-selector/variant-selector.component";
+import {ToastService} from "../toast.service";
+import {AccountsService} from "../accounts.service";
 
 @Component({
   selector: 'app-navbar',
@@ -48,7 +50,7 @@ export class NavbarComponent {
     }
   }
 
-  constructor(private web: WebService, private router: Router, private modal: NgbModal) {
+  constructor(private web: WebService, private router: Router, private modal: NgbModal, public toast: ToastService, public accounts: AccountsService) {
   }
 
   searchData() {
