@@ -13,6 +13,7 @@ export class ProteinTauDistributionComponent {
   private _data: IDataFrame<number, MSData> = new DataFrame()
   @Input() set data(value: IDataFrame<number, MSData>) {
     this._data = value
+    this._data = this._data.orderByDescending((row) => {row.Tissue}).bake()
     this.drawGraph()
   }
   get data(): IDataFrame<number, MSData> {
