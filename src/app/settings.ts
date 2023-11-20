@@ -1,4 +1,5 @@
 import {Sample} from "./sample";
+import {environment} from "../environments/environment";
 
 export class Settings {
     form: any = {
@@ -27,7 +28,7 @@ export class Settings {
     ]
     selectedMSDataID: number[] = []
     sampleMap: {[key: string]: Sample} = {}
-    baseUrl = "http://localhost:8000"
+    baseUrl = environment.baseUrl
     selectedSamples: string[] = []
 
     export() {

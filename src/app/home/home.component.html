@@ -30,17 +30,77 @@
 </div>
 
 <ng-template #loggedin>
-  <div class="flex justify-content-center p-2 g-2">
-    <div class="card border-primary user-details">
-      <div class="card-body">
-        <h5 class="card-title">User details</h5>
-        <p>Logged in as <span class="text-black">{{accounts.username}}</span></p>
-        <p>Last visit at {{accounts.lastVisited|date:"short"}}</p>
-        <ul *ngIf="accounts.currentHistory.length > 0">
-          History:
-          <li *ngFor="let item of accounts.currentHistory"><a href="#/protein-view/{{item}}">{{item}}</a></li>
-        </ul>
+  <div class="d-flex justify-content-around p-2 g-2">
+    <div class="p-2">
+      <div class="card border-primary user-details">
+        <div class="card-body">
+          <h5 class="card-title">User details</h5>
+          <p>Logged in as <span class="text-black">{{accounts.username}}</span></p>
+          <p>Last visit at {{accounts.lastVisited|date:"short"}}</p>
+          <ul *ngIf="accounts.currentHistory.length > 0">
+            History:
+            <li *ngFor="let item of accounts.currentHistory"><a href="#/protein-view/{{item}}">{{item}}</a></li>
+          </ul>
+        </div>
       </div>
     </div>
+    <div class="flex-grow-1 p-2">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Database parameters</h5>
+          <ul ngbNav #nav="ngbNav" [(activeId)]="activeId" class="nav-tabs">
+            <li [ngbNavItem]="1">
+              <button ngbNavLink>Modelling parameters</button>
+              <ng-template ngbNavContent>
+                <table class="table table-striped">
+                  <thead>
+                  <tr>
+                    <th scope="col">
+                      a
+                    </th>
+                    <th scope="col">
+                      b
+                    </th>
+                    <th scope="col">
+                      r
+                    </th>
+                    <th scope="col">
+                      n
+                    </th>
+                    <th scope="col">
+                      eps
+                    </th>
+                    <th scope="col">
+                      min
+                    </th>
+                    <th scope="col">
+                      Engine
+                    </th>
+                    <th scope="col">
+                      Tissue
+                    </th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr *ngFor="let m of web.modelParameters">
+                    <td>{{m.a}}</td>
+                    <td>{{m.b}}</td>
+                    <td>{{m.r}}</td>
+                    <td>{{m.n}}</td>
+                    <td>{{m.eps}}</td>
+                    <td>{{m.min}}</td>
+                    <td>{{m.Engine}}</td>
+                    <td>{{m.Tissue}}</td>
+                  </tr>
+                  </tbody>
+                </table>
+              </ng-template>
+            </li>
+          </ul>
+          <div [ngbNavOutlet]="nav" class="mt-2"></div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </ng-template>
