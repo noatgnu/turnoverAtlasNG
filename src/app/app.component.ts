@@ -21,10 +21,12 @@ export class AppComponent {
   initialize() {
     if (this.accounts.token === "") {
       const token = localStorage.getItem("token")
-      console.log(token)
       if (token) {
         this.accounts.token = token
         this.accounts.loggedIn = true
+        this.accounts.username = localStorage.getItem("username") || ""
+        this.accounts.loadHistory()
+        this.accounts.loadLastVisited()
       }
     }
 

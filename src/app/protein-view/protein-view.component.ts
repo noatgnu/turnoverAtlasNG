@@ -6,6 +6,7 @@ import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Modelling} from "../modelling-data";
 import {ToastService} from "../toast.service";
 import {SequenceCoverage} from "../sequence-coverage";
+import {AccountsService} from "../accounts.service";
 
 @Component({
   selector: 'app-protein-view',
@@ -33,6 +34,7 @@ export class ProteinViewComponent {
   @Input() set proteinGroup(value: string) {
     this.protein = value
     this.web.getMSData(this.protein).subscribe((data) => {
+      this.accounts.addHistory(this.protein)
       this.df = new DataFrame(data)
       console.log(this.df)
     })
@@ -48,7 +50,7 @@ export class ProteinViewComponent {
 
   page: number = 1
 
-  constructor(public web: WebService, private fb: FormBuilder, private toastService: ToastService) {
+  constructor(public web: WebService, private fb: FormBuilder, private toastService: ToastService, private accounts: AccountsService) {
 
   }
 

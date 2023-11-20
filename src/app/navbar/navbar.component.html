@@ -40,8 +40,18 @@
           </div>
         </div>
       </div>
+      <div>
+        <div display="dynamic" ngbDropdown class="d-inline-block">
+          <button class="btn btn-outline-primary ml-2" id="accountSession" ngbDropdownToggle>
+            Accounts
+          </button>
+          <div ngbDropdownMenu aria-labelledby="accountSession">
+            <button ngbDropdownItem (click)="accounts.logout()" *ngIf="accounts.token !== ''">Logout</button>
+            <button ngbDropdownItem (click)="goToHome()" *ngIf="accounts.token === ''">Login</button>
+          </div>
+        </div>
+      </div>
     </div>
-
 
   </div>
 </nav>

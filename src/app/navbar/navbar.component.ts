@@ -90,4 +90,8 @@ export class NavbarComponent {
         reader.readAsText(file)
     }
   }
+
+  goToHome() {
+    this.router.navigate(['home']).then(r => console.log(r))
+  }
 }

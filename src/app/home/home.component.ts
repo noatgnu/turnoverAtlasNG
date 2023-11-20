@@ -26,8 +26,13 @@ export class HomeComponent {
         this.accounts.login(this.form.value["username"], this.form.value["password"]).subscribe((data: any) => {
           this.accounts.token = data.token
           this.accounts.loggedIn = true
-          if (this.form.value["remember"] && this.form.value["remember"] === true) {
+          if (this.form.value["username"]) {
+            this.accounts.username = this.form.value["username"]
+          }
+
+          if (this.form.value["remember"] && this.form.value["remember"] === true && this.form.value["username"]) {
             localStorage.setItem("token", data.token)
+            localStorage.setItem("username", this.form.value["username"])
           }
           this.toast.show("User information", "Logged in successfully")
           this.web.initializeModelParameters.next(true)
@@ -35,6 +40,9 @@ export class HomeComponent {
         })
       }
     }
+  }
 
+  logoutHandler() {
+    this.accounts.logout()
   }
 }

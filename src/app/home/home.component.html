@@ -1,4 +1,4 @@
-<div class="flex justify-content-center align-items-center mt-5" *ngIf="accounts.token === ''">
+<div class="flex justify-content-center align-items-center mt-5" *ngIf="accounts.token === ''; else loggedin">
   <div class="card login-box">
     <div class="card-body">
       <h5 class="card-title">Login</h5>
@@ -28,3 +28,20 @@
     </div>
   </div>
 </div>
+
+<ng-template #loggedin>
+  <div class="flex justify-content-center p-2 g-2">
+    <div class="card border-primary user-details">
+      <div class="card-body">
+        <h5 class="card-title">User details</h5>
+        <p>Logged in as <span class="text-black">{{accounts.username}}</span></p>
+        <p>Last visit at {{accounts.lastVisited|date:"short"}}</p>
+        <ul *ngIf="accounts.currentHistory.length > 0">
+          History:
+          <li *ngFor="let item of accounts.currentHistory"><a href="#/protein-view/{{item}}">{{item}}</a></li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</ng-template>

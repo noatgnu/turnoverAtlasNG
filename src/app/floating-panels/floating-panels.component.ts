@@ -103,6 +103,7 @@ export class FloatingPanelsComponent {
         this.web.mergeSearchOperations(this.selected, result.color, result.name, result.remove)
         this.web.redrawSubject.next(true)
         this.web.selectionSubject.next(true)
+        this.selected = []
       })
     }
   }
