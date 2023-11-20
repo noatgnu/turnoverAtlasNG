@@ -8,24 +8,29 @@
 <!--<div class="container mt-5" *ngIf="filteredDF.count() > 0">-->
 <!--  <app-protein-view-tissue-based [data]="filteredDF"></app-protein-view-tissue-based>-->
 <!--</div>-->
-
-<div class="container mt-5" *ngIf="filteredData.count() > 0; else empty">
-  <app-protein-tau-collection [data]="filteredData"></app-protein-tau-collection>
-</div>
-
-<div class="container mt-5" *ngIf="modellingDataGroup.count() > 0; else loadingModelling">
-  <app-protein-modelling-collection [data]="modellingDataGroup"></app-protein-modelling-collection>
-</div>
+<ng-container *ngIf="!downloading; else downloadingMSDataProgress">
+  <div class="container mt-5" *ngIf="filteredData.count() > 0; else empty">
+    <app-protein-tau-collection [data]="filteredData"></app-protein-tau-collection>
+  </div>
+  <div class="container mt-5" *ngIf="modellingDataGroup.count() > 0; else loadingModelling">
+    <app-protein-modelling-collection [data]="modellingDataGroup"></app-protein-modelling-collection>
+  </div>
+</ng-container>
 
 <div class="container mt-5" *ngIf="coverageData">
   <app-coverage-plot [coverageData]="coverageData"></app-coverage-plot>
 </div>
 
 
-<div class="container mt-5" *ngIf="filteredData.count() > 0; else empty">
-  <app-protein-view-peptide-collection [data]="filteredData"></app-protein-view-peptide-collection>
-</div>
-<app-floating-panels [filteredDF]="filteredData"></app-floating-panels>
+
+
+<ng-container *ngIf="!downloading">
+  <div class="container mt-5" *ngIf="filteredData.count() > 0; else empty">
+    <app-protein-view-peptide-collection [data]="filteredData"></app-protein-view-peptide-collection>
+  </div>
+  <app-floating-panels [filteredDF]="filteredData"></app-floating-panels>
+</ng-container>
+
 <ng-template #empty>
   <div class="container d-flex justify-content-center align-content-center">
     <p>
@@ -33,7 +38,6 @@
     </p>
   </div>
 </ng-template>
-
 <ng-template #loadingModelling>
   <div class="container d-flex justify-content-center align-content-center">
     <p>
@@ -42,3 +46,8 @@
   </div>
 </ng-template>
 
+<ng-template #downloadingMSDataProgress>
+  <div class="container p-2">
+    <ngb-progressbar type="primary" [animated]="true" [value]="100" [striped]="true">{{'Downloaded ' + msDataProgress + ' MB'}}</ngb-progressbar>
+  </div>
+</ng-template>

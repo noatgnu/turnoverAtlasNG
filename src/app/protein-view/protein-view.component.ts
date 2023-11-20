@@ -1,12 +1,13 @@
-import { Component, Input } from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {WebService} from "../web.service";
 import {DataFrame, IDataFrame, ISeries, Series} from "data-forge";
-import {MSData, MSDataValues} from "../msdata";
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {MSData} from "../msdata";
+import {FormBuilder} from "@angular/forms";
 import {Modelling} from "../modelling-data";
 import {ToastService} from "../toast.service";
 import {SequenceCoverage} from "../sequence-coverage";
 import {AccountsService} from "../accounts.service";
+import {HttpEventType} from "@angular/common/http";
 
 @Component({
   selector: 'app-protein-view',
@@ -27,6 +28,8 @@ export class ProteinViewComponent {
     return this._filteredDF
   }
 
+  msDataProgress: number = 0
+  downloading: boolean = false
   modellingData: IDataFrame<number, Modelling> = new DataFrame()
   //modellingDataGroup: ISeries<number, IDataFrame<number, Modelling>> = new Series()
   modellingDataGroup: ISeries<number, IDataFrame<number, MSData>> = new Series()
@@ -34,9 +37,27 @@ export class ProteinViewComponent {
   @Input() set proteinGroup(value: string) {
     this.protein = value
     this.web.getMSData(this.protein).subscribe((data) => {
-      this.accounts.addHistory(this.protein)
-      this.df = new DataFrame(data)
-      console.log(this.df)
+      this.msDataProgress = 0
+      console.log(data)
+      if (data.type === HttpEventType.DownloadProgress) {
+
+        this.downloading = true
+        if (data.total) {
+          this.msDataProgress = Math.round(100 * data.loaded / data.total)
+        } else {
+          // convert to megabytes
+          this.msDataProgress = Math.round(data.loaded / 1048576)
+        }
+        console.log(this.msDataProgress)
+
+      } else if (data.type === HttpEventType.Response) {
+        this.toastService.show("TAU Data retrieval", "Data retrieved successfully")
+        this.downloading = false
+        if (data.body) {
+          this.accounts.addHistory(this.protein)
+          this.df = new DataFrame(data.body)
+        }
+      }
     })
     for (const i of value.split(",")) {
 

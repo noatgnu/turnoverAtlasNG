@@ -71,11 +71,7 @@ export class WebService {
 
   getMSData(proteinGroup: string) {
     this.toastService.show("Loading", "Loading MS data of " + proteinGroup)
-    return this.http.get<MSData[]>(`${this.baseUrl}/api/turnoverdata/get_all_from_queryset/`, {responseType: 'json', observe: 'body', params: {Protein_Group: proteinGroup}}).pipe(tap((data: MSData[]) => {
-      this.toastService.show("Success", "Successfully retrieved MS data of " + proteinGroup)
-    }),
-      map((data: MSData[]) => {return data})
-    )
+    return this.http.get<MSData[]>(`${this.baseUrl}/api/turnoverdata/get_all_from_queryset/`, {responseType: 'json', observe: 'events', reportProgress: true,  params: {Protein_Group: proteinGroup}})
   }
 
   postModellingData(tissue: string, engine: string, tau_POI: number, tau_POI_upper_bound: number, tau_POI_lower_bound: number, data: number[]|undefined = []) {

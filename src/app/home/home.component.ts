@@ -41,8 +41,4 @@ export class HomeComponent {
       }
     }
   }
-
-  logoutHandler() {
-    this.accounts.logout()
-  }
 }
