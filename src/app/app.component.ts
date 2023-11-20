@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import {WebService} from "./web.service";
 import {ToastService} from "./toast.service";
 import {forkJoin} from "rxjs";
+import {AccountsService} from "./accounts.service";
 
 @Component({
   selector: 'app-root',
@@ -9,7 +10,7 @@ import {forkJoin} from "rxjs";
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  constructor(private web: WebService, private toastService: ToastService) {
+  constructor(private web: WebService, private toastService: ToastService, private accounts: AccountsService) {
     this.initialize()
     this.web.initializeModelParameters.asObservable().subscribe(data => {
       this.initialize()
@@ -17,6 +18,14 @@ export class AppComponent {
   }
 
   initialize() {
+    if (this.accounts.token !== "") {
+      const token = localStorage.getItem("token")
+      if (token) {
+        this.accounts.token = token
+        this.accounts.loggedIn = true
+      }
+    }
+
     forkJoin([ this.web.getSampleMetadata(), this.web.getAllModelParameters()]).subscribe(
       (data) => {
         this.toastService.show('Initialization', 'Loading sample metadata and model parameters...')

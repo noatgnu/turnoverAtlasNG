@@ -12,7 +12,8 @@ import {WebService} from "../web.service";
 export class HomeComponent {
   form = this.fb.group({
     username: new FormControl<string>('', Validators.required),
-    password: new FormControl<string>('', Validators.required)
+    password: new FormControl<string>('', Validators.required),
+    remember: new FormControl<boolean>(false)
   })
   constructor(public accounts: AccountsService, private fb: FormBuilder, private toast: ToastService, private web: WebService) {
 
@@ -25,8 +26,12 @@ export class HomeComponent {
         this.accounts.login(this.form.value["username"], this.form.value["password"]).subscribe((data: any) => {
           this.accounts.token = data.token
           this.accounts.loggedIn = true
+          if (this.form.value["remember"] && this.form.value["remember"] === true) {
+            localStorage.setItem("token", data.token)
+          }
           this.toast.show("User information", "Logged in successfully")
           this.web.initializeModelParameters.next(true)
+
         })
       }
     }
