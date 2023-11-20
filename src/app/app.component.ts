@@ -10,6 +10,7 @@ import {AccountsService} from "./accounts.service";
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+  ready = false
   constructor(private web: WebService, private toastService: ToastService, private accounts: AccountsService) {
     this.initialize()
     this.web.initializeModelParameters.asObservable().subscribe(data => {
@@ -18,8 +19,9 @@ export class AppComponent {
   }
 
   initialize() {
-    if (this.accounts.token !== "") {
+    if (this.accounts.token === "") {
       const token = localStorage.getItem("token")
+      console.log(token)
       if (token) {
         this.accounts.token = token
         this.accounts.loggedIn = true
@@ -33,8 +35,10 @@ export class AppComponent {
           this.web.settings.sampleMap[s.Sample_Name] = s
         }
         this.web.modelParameters = data[1]
+        this.ready = true
       }, (error) => {
         this.toastService.show('Initialization', 'Error loading sample metadata and model parameters. Please log in.')
+        this.ready = true
       }
     )
   }
