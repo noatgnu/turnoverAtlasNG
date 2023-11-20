@@ -8,6 +8,7 @@ import {ToastService} from "../toast.service";
 import {SequenceCoverage} from "../sequence-coverage";
 import {AccountsService} from "../accounts.service";
 import {HttpEventType} from "@angular/common/http";
+import {Settings} from "../settings";
 
 @Component({
   selector: 'app-protein-view',
@@ -36,6 +37,7 @@ export class ProteinViewComponent {
   coverageData: SequenceCoverage|undefined = undefined
   @Input() set proteinGroup(value: string) {
     this.protein = value
+
     this.web.getMSData(this.protein).subscribe((data) => {
       this.msDataProgress = 0
       console.log(data)
@@ -51,6 +53,7 @@ export class ProteinViewComponent {
         console.log(this.msDataProgress)
 
       } else if (data.type === HttpEventType.Response) {
+        this.web.settings.currentProteinGroup = this.protein
         this.toastService.show("TAU Data retrieval", "Data retrieved successfully")
         this.downloading = false
         if (data.body) {

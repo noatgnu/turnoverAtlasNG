@@ -35,8 +35,9 @@
             Session
           </button>
           <div ngbDropdownMenu aria-labelledby="dropdownSession">
-            <button ngbDropdownItem (click)="save()">Session Save</button>
-            <button ngbDropdownItem (click)="loadSettings.click()">Session Load</button>
+            <button ngbDropdownItem (click)="save()">Save to computer</button>
+            <button ngbDropdownItem (click)="loadSettings.click()">Load from computer</button>
+            <button ngbDropdownItem (click)="openSaveSessionHandler()">Save to server</button>
           </div>
         </div>
       </div>
@@ -46,6 +47,7 @@
             Accounts
           </button>
           <div ngbDropdownMenu aria-labelledby="accountSession">
+            <button ngbDropdownItem (click)="openSessionBrowser()" *ngIf="accounts.token !== ''">Saved session browser</button>
             <button ngbDropdownItem (click)="accounts.logout()" *ngIf="accounts.token !== ''">Logout</button>
             <button ngbDropdownItem (click)="goToHome()" *ngIf="accounts.token === ''">Login</button>
           </div>

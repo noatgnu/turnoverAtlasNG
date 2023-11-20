@@ -1,0 +1,16 @@
+<div class="modal-header">
+  <h5 class="modal-title">Session Saving Prompt</h5>
+</div>
+<div class="modal-body">
+  <p>Do you want to save the current session?</p>
+  <form [formGroup]="form">
+    <div class="form-group">
+      <label for="sessionName">Session Name</label>
+      <input type="text" class="form-control" id="sessionName" formControlName="name" placeholder="Enter session name">
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="close()">Cancel</button>
+  <button type="button" class="btn btn-primary" (click)="saveSession()">Save</button>
+</div>

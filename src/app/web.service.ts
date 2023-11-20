@@ -182,4 +182,23 @@ export class WebService {
   getExactAccFromGene(gene: string) {
     return this.http.get<string[]>(`${this.baseUrl}/api/accessionmap/get_exact_accession_id_from_genes/`, {responseType: 'json', observe: 'body', params: {genes: gene}})
   }
+
+  saveSettingsOnServer(settingsPayload: any, proteinGroup: string, name: string = "") {
+    const payload = {"details": settingsPayload, "protein_group": proteinGroup, "name": name}
+    return this.http.post<any>(`${this.baseUrl}/api/session/`, payload, {responseType: 'json', observe: 'body'})
+  }
+
+  getAllSettingsFromServer() {
+    return this.http.get<any>(`${this.baseUrl}/api/session/user_only/`, {responseType: 'json', observe: 'body'}).pipe(
+      map((data: any) => {return data.map((d: any) => {return {id: d.id, name: d.name, protein_group: d.protein_group, details: d.details, created: new Date(d.created)}})})
+    )
+  }
+
+  getSettingsByID(id: number) {
+    return this.http.get<any>(`${this.baseUrl}/api/session/${id}/`, {responseType: 'json', observe: 'body'})
+  }
+
+  deleteSettingsByID(id: number) {
+    return this.http.delete<any>(`${this.baseUrl}/api/session/${id}/`, {responseType: 'json', observe: 'body'})
+  }
 }

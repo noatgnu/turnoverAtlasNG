@@ -33,6 +33,8 @@ import { CoveragePlotComponent } from './coverage-plot/coverage-plot.component';
 import { VariantSelectorComponent } from './variant-selector/variant-selector.component';
 import { HomeComponent } from './home/home.component';
 import {AuthInterceptor} from "./auth.interceptor";
+import { SessionSavePromptComponent } from './session-save-prompt/session-save-prompt.component';
+import { SavedSessionsBrowserComponent } from './saved-sessions-browser/saved-sessions-browser.component';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 @NgModule({
@@ -56,7 +58,9 @@ PlotlyModule.plotlyjs = PlotlyJS;
     MergePromptComponent,
     CoveragePlotComponent,
     VariantSelectorComponent,
-    HomeComponent
+    HomeComponent,
+    SessionSavePromptComponent,
+    SavedSessionsBrowserComponent
   ],
     imports: [
         BrowserModule,

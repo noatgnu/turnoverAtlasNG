@@ -2,6 +2,7 @@ import {Sample} from "./sample";
 import {environment} from "../environments/environment";
 
 export class Settings {
+    currentProteinGroup: string = ""
     form: any = {
 
     }
@@ -33,6 +34,7 @@ export class Settings {
 
     export() {
         return {
+            currentProteinGroup: this.currentProteinGroup,
             currentColorPosition: this.currentColorPosition,
             searchOperations: this.searchOperations,
             searchMap: this.searchMap,
@@ -64,4 +66,6 @@ export class Settings {
 
         document.body.removeChild(element);
     }
+
+
 }

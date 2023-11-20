@@ -6,6 +6,8 @@ import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {VariantSelectorComponent} from "../variant-selector/variant-selector.component";
 import {ToastService} from "../toast.service";
 import {AccountsService} from "../accounts.service";
+import {SessionSavePromptComponent} from "../session-save-prompt/session-save-prompt.component";
+import {SavedSessionsBrowserComponent} from "../saved-sessions-browser/saved-sessions-browser.component";
 
 @Component({
   selector: 'app-navbar',
@@ -93,5 +95,13 @@ export class NavbarComponent {
 
   goToHome() {
     this.router.navigate(['home']).then(r => console.log(r))
+  }
+
+  openSaveSessionHandler() {
+    const ref = this.modal.open(SessionSavePromptComponent)
+  }
+
+  openSessionBrowser() {
+    const ref = this.modal.open(SavedSessionsBrowserComponent)
   }
 }
