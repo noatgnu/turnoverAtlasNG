@@ -101,7 +101,7 @@
                   <tbody>
                   <ng-container *ngFor="let m of web.modelParameters; let ind = index">
                     <tr>
-                      <td><div class="form-check"><input class="form-check-input" (change)="selectModel(ind)" type="checkbox"></div></td>
+                      <td><div class="form-check"><input class="form-check-input" (change)="selectModel(ind)" type="checkbox" [ngModel]="selectionStatus[ind]"></div></td>
                       <td>{{m.a}}</td>
                       <td>{{m.b}}</td>
                       <td>{{m.r}}</td>

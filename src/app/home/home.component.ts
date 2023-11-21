@@ -21,8 +21,12 @@ export class HomeComponent {
 
   selectedModel: ModelParameters[] = []
 
-  constructor(public accounts: AccountsService, private fb: FormBuilder, private toast: ToastService, public web: WebService) {
+  selectionStatus: {[key: string]: boolean} = {}
 
+  constructor(public accounts: AccountsService, private fb: FormBuilder, private toast: ToastService, public web: WebService) {
+    for (let i = 0; i < this.web.modelParameters.length; i++) {
+      this.selectionStatus[i] = false
+    }
   }
 
   loginHandler() {
@@ -49,12 +53,21 @@ export class HomeComponent {
   }
 
   togglePanel(id: number) {
-    console.log(id)
     this.activePanel = this.activePanel === id ? null : id
   }
 
   selectAll() {
-    this.selectedModel = this.web.modelParameters.slice()
+    if (this.selectedModel.length === this.web.modelParameters.length) {
+      this.selectedModel = []
+      for (const i in this.selectionStatus) {
+        this.selectionStatus[i] = false
+      }
+    } else {
+      this.selectedModel = this.web.modelParameters.slice()
+      for (const i in this.selectionStatus) {
+        this.selectionStatus[i] = true
+      }
+    }
     this.selectedModel = [...this.selectedModel]
   }
 
@@ -65,6 +78,7 @@ export class HomeComponent {
     } else {
       this.selectedModel.push(model)
     }
+    this.selectionStatus[ind] = !this.selectionStatus[ind]
     this.selectedModel = [...this.selectedModel]
   }
 }
