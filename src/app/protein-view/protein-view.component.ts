@@ -36,38 +36,36 @@ export class ProteinViewComponent {
   modellingDataGroup: ISeries<number, IDataFrame<number, MSData>> = new Series()
   coverageData: SequenceCoverage|undefined = undefined
   @Input() set proteinGroup(value: string) {
-    this.protein = value
+    this.initialize(value).then(() => {
+      this.web.getMSData(this.protein).subscribe((data) => {
+        this.msDataProgress = 0
+        if (data.type === HttpEventType.DownloadProgress) {
 
-    this.web.getMSData(this.protein).subscribe((data) => {
-      this.msDataProgress = 0
-      console.log(data)
-      if (data.type === HttpEventType.DownloadProgress) {
+          this.downloading = true
+          if (data.total) {
+            this.msDataProgress = Math.round(100 * data.loaded / data.total)
+          } else {
+            // convert to megabytes
+            this.msDataProgress = Math.round(data.loaded / 1048576)
+          }
 
-        this.downloading = true
-        if (data.total) {
-          this.msDataProgress = Math.round(100 * data.loaded / data.total)
-        } else {
-          // convert to megabytes
-          this.msDataProgress = Math.round(data.loaded / 1048576)
+        } else if (data.type === HttpEventType.Response) {
+          this.web.settings.currentProteinGroup = this.protein
+          this.toastService.show("TAU Data retrieval", "Data retrieved successfully")
+          this.downloading = false
+          if (data.body) {
+            this.accounts.addHistory(this.protein)
+            this.df = new DataFrame(data.body)
+          }
         }
-        console.log(this.msDataProgress)
+      })
+      for (const i of value.split(",")) {
 
-      } else if (data.type === HttpEventType.Response) {
-        this.web.settings.currentProteinGroup = this.protein
-        this.toastService.show("TAU Data retrieval", "Data retrieved successfully")
-        this.downloading = false
-        if (data.body) {
-          this.accounts.addHistory(this.protein)
-          this.df = new DataFrame(data.body)
-        }
+        this.web.getCoverageData(i).subscribe((data) => {
+          this.coverageData = data
+        })
       }
     })
-    for (const i of value.split(",")) {
-
-      this.web.getCoverageData(i).subscribe((data) => {
-        this.coverageData = data
-      })
-    }
   }
 
 
@@ -105,6 +103,15 @@ export class ProteinViewComponent {
       //   console.log(this.modellingData)
       // })
     }
+  }
 
+  async initialize(value: any) {
+    const data = value.split("&")
+    this.protein = data[0]
+    if (data.length === 2) {
+      const settings = await this.web.getSettingsByID(parseInt(data[1])).toPromise()
+      this.web.settings.import(settings.details)
+      this.toastService.show("Session load", "Session loaded successfully")
+    }
   }
 }

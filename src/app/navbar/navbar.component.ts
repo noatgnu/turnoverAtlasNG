@@ -102,6 +102,6 @@ export class NavbarComponent {
   }
 
   openSessionBrowser() {
-    const ref = this.modal.open(SavedSessionsBrowserComponent)
+    const ref = this.modal.open(SavedSessionsBrowserComponent, {size: "lg"})
   }
 }

@@ -50,4 +50,13 @@ export class SavedSessionsBrowserComponent {
       this.toast.show("Session load", "Session load failed")
     })
   }
+
+  getURL(d: any) {
+    // create and copy url to clipboard
+    const url = window.location.origin + "#/protein-view/" + d.protein_group + "&" + d.id
+    navigator.clipboard.writeText(url).then(() => {
+      this.toast.show("URL", "URL copied to clipboard")
+    })
+  }
+
 }
