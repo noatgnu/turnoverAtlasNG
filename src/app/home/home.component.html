@@ -58,9 +58,17 @@
             <li [ngbNavItem]="1">
               <button ngbNavLink>Modelling parameters</button>
               <ng-template ngbNavContent>
-                <table class="table table-striped">
+                <div class="d-flex justify-content-center" *ngIf="selectedModel.length > 0">
+                  <app-kpool-only-plot [data]="selectedModel"></app-kpool-only-plot>
+                </div>
+                <table class="table">
                   <thead>
                   <tr>
+                    <th scope="col">
+                      <div class="form-check">
+                        <input class="form-check-input" (change)="selectAll()" type="checkbox">
+                      </div>
+                    </th>
                     <th scope="col">
                       a
                     </th>
@@ -85,19 +93,36 @@
                     <th scope="col">
                       Tissue
                     </th>
+                    <th scope="col">
+                      Actions
+                    </th>
                   </tr>
                   </thead>
                   <tbody>
-                  <tr *ngFor="let m of web.modelParameters">
-                    <td>{{m.a}}</td>
-                    <td>{{m.b}}</td>
-                    <td>{{m.r}}</td>
-                    <td>{{m.n}}</td>
-                    <td>{{m.eps}}</td>
-                    <td>{{m.min}}</td>
-                    <td>{{m.Engine}}</td>
-                    <td>{{m.Tissue}}</td>
-                  </tr>
+                  <ng-container *ngFor="let m of web.modelParameters; let ind = index">
+                    <tr>
+                      <td><div class="form-check"><input class="form-check-input" (change)="selectModel(ind)" type="checkbox"></div></td>
+                      <td>{{m.a}}</td>
+                      <td>{{m.b}}</td>
+                      <td>{{m.r}}</td>
+                      <td>{{m.n}}</td>
+                      <td>{{m.eps}}</td>
+                      <td>{{m.min}}</td>
+                      <td>{{m.Engine}}</td>
+                      <td>{{m.Tissue}}</td>
+                      <td><button class="btn btn-sm" (click)="togglePanel(ind)"><i class="bi bi-graph-up"></i></button></td>
+                    </tr>
+                    <tr *ngIf="activePanel !== null && activePanel===ind">
+                      <td [colSpan]="10">
+                        <div class="d-flex justify-content-center">
+
+                          <div>
+                            <app-kpool-only-plot [data]="[m]"></app-kpool-only-plot>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  </ng-container>
                   </tbody>
                 </table>
               </ng-template>

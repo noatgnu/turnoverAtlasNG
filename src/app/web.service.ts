@@ -201,4 +201,8 @@ export class WebService {
   deleteSettingsByID(id: number) {
     return this.http.delete<any>(`${this.baseUrl}/api/session/${id}/`, {responseType: 'json', observe: 'body'})
   }
+
+  getKpool(tissue: string, engine: string, step: 1, start: 0, end: 51) {
+    return this.http.get<any>(`${this.baseUrl}/api/modelling/`, {responseType: 'json', observe: 'body', params: {tissue: tissue, engine: engine, step: step, start: start, end: end}})
+  }
 }

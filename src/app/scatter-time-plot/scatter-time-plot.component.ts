@@ -23,7 +23,7 @@ export class ScatterTimePlotComponent {
       range: [0, 50]
     },
     yaxis: {
-      title: "H/L",
+      title: "H + H/L",
       range: [0, 1.5]
     }
   }
