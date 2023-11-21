@@ -21,16 +21,23 @@
       <td>{{session.protein_group}}</td>
       <td>{{session.name}}</td>
       <td>{{session.created | date:'short'}}</td>
-      <td class="d-flex g-2">
-        <button type="button" class="btn btn-sm btn-primary" (click)="loadSession(session.id)">
-          <i class="bi bi-minecart-loaded"></i>
-        </button>
-        <button type="button" class="btn btn-sm btn-danger" (click)="deleteSession(session.id)">
-          <i class="bi bi-trash"></i>
-        </button>
-        <button type="button" class="btn btn-sm btn-primary" (click)="getURL(session)">
-          <i class="bi bi-clipboard"></i>
-        </button>
+      <td class="d-flex justify-content-center g-2">
+        <div>
+          <button type="button" class="btn btn-sm btn-primary" (click)="loadSession(session.id)">
+            <i class="bi bi-play"></i>
+          </button>
+        </div>
+        <div>
+          <button type="button" class="btn btn-sm btn-danger" (click)="deleteSession(session.id)">
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
+        <div>
+          <button type="button" class="btn btn-sm btn-primary" (click)="getURL(session)">
+            <i class="bi bi-clipboard"></i>
+          </button>
+        </div>
+
       </td>
     </tr>
     </tbody>
