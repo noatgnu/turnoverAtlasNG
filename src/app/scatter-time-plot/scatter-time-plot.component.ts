@@ -120,7 +120,24 @@ export class ScatterTimePlotComponent {
         graphData.push(pulseModel)
         graphData.push(uppderBound)
         graphData.push(lowerBound)
+        const kpoolData = await this.web.getKpool(this._data.Tissue, this._data.Engine, 1, 0, 51).toPromise()
 
+        const kpoolModel: any = {
+          x: [],
+          y: [],
+          mode: 'lines',
+          name: 'Kpool Model',
+          line: {
+            color: 'rgb(219, 64, 82)',
+            shape: 'spline',
+          }
+        }
+
+        for (const i of kpoolData) {
+          kpoolModel.x.push(i.day)
+          kpoolModel.y.push(i.value)
+        }
+        graphData.push(kpoolModel)
         // try {
         //   modelResult = await this.web.postModellingData(this._data.Tissue, this._data.Engine, this._data.tau_POI, this._data.tau_POI_upper_bound, this._data.tau_POI_lower_bound, days).toPromise()
         //   const kpoolModel: any = {
