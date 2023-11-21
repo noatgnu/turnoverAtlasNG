@@ -133,7 +133,7 @@ export class ScatterTimePlotComponent {
           }
         }
 
-        for (const i of kpoolData) {
+        for (const i of kpoolData.kpool) {
           kpoolModel.x.push(i.day)
           kpoolModel.y.push(i.value)
         }
