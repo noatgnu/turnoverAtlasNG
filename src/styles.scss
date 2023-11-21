@@ -33,12 +33,6 @@ $theme-colors: (
   border-color: $purple !important;
 }
 
-// color card-title in darker purple than primary theme
-.card-title {
-  color: $purple-dark !important;
-}
-
-
 @import "bootstrap/scss/bootstrap";
 body {
   padding-top: 100px;
