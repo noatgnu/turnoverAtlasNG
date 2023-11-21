@@ -1,10 +1,47 @@
 /* You can add global styles to this file, and also import other style files */
 
 /* Importing Bootstrap SCSS file. */
-@import "bootstrap/scss/bootstrap";
 
+@import "../node_modules/bootstrap/scss/functions";
+@import "node_modules/bootstrap/scss/variables";
+
+// bootstrap theme with a focus on dark purple instead of dark blue
+$purple: #6f42c1;
+$purple-light: #957bbe;
+$purple-dark: #563d7c;
+
+$theme-colors: (
+  "primary": $purple,
+  "secondary": $gray-600,
+  "success": $green,
+  "info": $cyan,
+  "warning": $yellow,
+  "danger": $red,
+  "light": $gray-100,
+  "dark": $gray-800,
+);
+
+// theme of accordion buttons
+.accordion-button:not(.collapsed) {
+  color: #FFF  !important;
+  background-color: $purple-light !important;
+}
+
+// color the checked box in the same purple as primary theme
+.form-check-input:checked {
+  background-color: $purple !important;
+  border-color: $purple !important;
+}
+
+// color card-title in darker purple than primary theme
+.card-title {
+  color: $purple-dark !important;
+}
+
+
+@import "bootstrap/scss/bootstrap";
 body {
-  padding-top: 50px;
+  padding-top: 100px;
 }
 
 

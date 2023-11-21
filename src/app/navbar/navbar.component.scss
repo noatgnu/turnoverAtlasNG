@@ -1,0 +1,8 @@
+// custom bootstrap nav-brand text logo class with gradient purple
+.text-gradient {
+  background: -webkit-linear-gradient(45deg, #6f42c1, #957bbe);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 30px;
+  font-family: Helvetica, Arial, sans-serif;
+}
