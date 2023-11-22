@@ -23,10 +23,19 @@ export class PlotSettingsComponent {
     markerColor: [this.web.settings.markerColor,],
   })
 
+  formKpoolOnly = this.fb.group({
+  })
 
+  kPoolOnlyList: string[] = Object.keys(this.web.settings.kpoolOnlyColorMap)
 
   constructor(private fb: FormBuilder, private web: WebService, private modal: NgbActiveModal) {
-
+    const temp: any = {}
+    for (const i in this.web.settings.kpoolOnlyColorMap) {
+      this.kPoolOnlyList.push(i)
+      temp[i] = [this.web.settings.kpoolOnlyColorMap[i],]
+    }
+    this.formKpoolOnly = this.fb.group(temp)
+    console.log(this.formKpoolOnly)
   }
 
   close() {
@@ -58,6 +67,14 @@ export class PlotSettingsComponent {
       }
       if (this.form.value["markerColor"]) {
         this.web.settings.markerColor = this.form.value["markerColor"]
+      }
+    }
+    if (this.formKpoolOnly.valid) {
+      for (const i in this.formKpoolOnly.value) {
+        if (this.web.settings.kpoolOnlyColorMap[i]) {
+          // @ts-ignore
+          this.web.settings.kpoolOnlyColorMap[i] = this.formKpoolOnly.value[i]
+        }
       }
     }
     this.web.redrawSubject.next(true)

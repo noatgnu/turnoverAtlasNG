@@ -107,6 +107,6 @@ export class NavbarComponent {
   }
 
   openPlotSettings() {
-    const ref = this.modal.open(PlotSettingsComponent)
+    const ref = this.modal.open(PlotSettingsComponent, {scrollable: true})
   }
 }

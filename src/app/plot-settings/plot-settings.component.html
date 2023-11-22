@@ -59,6 +59,14 @@
       <label>Pulse color</label>
     </div>
   </form>
+  <hr>
+  <b>Kpool only line chart</b>
+  <form [formGroup]="formKpoolOnly">
+    <div class="d-flex align-items-center gap-2" *ngFor="let i of kPoolOnlyList">
+      <ngx-colors ngx-colors-trigger [formControlName]="i"></ngx-colors>
+      <label>{{i}} color</label>
+    </div>
+  </form>
 </div>
 <div class="modal-footer">
   <button type="button" class="btn btn-secondary" (click)="close()">Close</button>

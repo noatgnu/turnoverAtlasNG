@@ -10,7 +10,7 @@ export class Settings {
 
     }
     currentColorPosition: number = 0
-
+    kpoolOnlyColorMap: any = {}
     searchOperations: string[] = []
     searchMap: any = {}
 
