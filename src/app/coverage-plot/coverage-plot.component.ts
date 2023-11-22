@@ -177,12 +177,12 @@ export class CoveragePlotComponent {
     this.displayDF = this.df.where((row) => {
       return row.Tissue === this.form.controls['tissues'].value
     })
-    if (this.form.controls['valid_tau'].value) {
+    if (this.form.controls['valid_tau'].value === true) {
       this.displayDF = this.displayDF.where((row) => {
-        return row.tau_POI !== null
+        return row.HalfLife_POI !== null
       })
     }
-    if (this.form.controls['selected_only'].value) {
+    if (this.form.controls['selected_only'].value === true) {
       this.displayDF = this.displayDF.where((row) => {
           return this.web.settings.selectedMSDataID.includes(row.id)
       })
