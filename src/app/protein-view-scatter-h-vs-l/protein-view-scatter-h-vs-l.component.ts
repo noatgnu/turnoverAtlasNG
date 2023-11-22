@@ -29,7 +29,8 @@ export class ProteinViewScatterHVsLComponent {
     },
     yaxis: {
       title: "Log2 L",
-    }
+    },
+
   }
 
   constructor(private web: WebService) { }

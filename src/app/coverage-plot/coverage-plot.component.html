@@ -29,7 +29,7 @@
                         </label>
                     </div>
                 </form>
-                <plotly-plot [revision]="revision" *ngFor="let e of engines" [data]="graphDataMap[e]" [layout]="graphLayoutMap[e]"></plotly-plot>
+                <plotly-plot [config]="config" [revision]="revision" *ngFor="let e of engines" [data]="graphDataMap[e]" [layout]="graphLayoutMap[e]"></plotly-plot>
 
             </div>
         </div>

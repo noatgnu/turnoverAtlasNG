@@ -37,6 +37,7 @@ import { SessionSavePromptComponent } from './session-save-prompt/session-save-p
 import { SavedSessionsBrowserComponent } from './saved-sessions-browser/saved-sessions-browser.component';
 import { KpoolOnlyPlotComponent } from './kpool-only-plot/kpool-only-plot.component';
 import { PlotSettingsComponent } from './plot-settings/plot-settings.component';
+import { ProteinViewPeptideContainerCompactComponent } from './protein-view-peptide-container-compact/protein-view-peptide-container-compact.component';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 @NgModule({
@@ -64,7 +65,8 @@ PlotlyModule.plotlyjs = PlotlyJS;
     SessionSavePromptComponent,
     SavedSessionsBrowserComponent,
     KpoolOnlyPlotComponent,
-    PlotSettingsComponent
+    PlotSettingsComponent,
+    ProteinViewPeptideContainerCompactComponent
   ],
     imports: [
         BrowserModule,

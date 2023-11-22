@@ -24,7 +24,7 @@
   </form>
   <div class="flex-grow-1 overflow-auto">
     <div *ngFor="let e of engineList">
-      <plotly-plot (plotlyClick)="OnClick($event)" [data]="graphDataMap[e]" [layout]="graphLayoutMap[e]" [revision]="revision"></plotly-plot>
+      <plotly-plot [config]="config" (plotlyClick)="OnClick($event)" [data]="graphDataMap[e]" [layout]="graphLayoutMap[e]" [revision]="revision"></plotly-plot>
     </div>
   </div>
 

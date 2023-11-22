@@ -28,7 +28,16 @@ export class KpoolOnlyPlotComponent {
   get data(): ModelParameters[] {
     return this._data
   }
-
+  config: any = {
+    //modeBarButtonsToRemove: ["toImage"]
+    toImageButtonOptions: {
+      format: 'svg',
+      filename: this.graphLayout.title.text,
+      height: this.graphLayout.height,
+      width: this.graphLayout.width,
+      scale: 1
+    }
+  }
   revision = 0
   constructor() { }
 

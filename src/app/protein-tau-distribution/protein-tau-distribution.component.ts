@@ -40,6 +40,13 @@ export class ProteinTauDistributionComponent {
   graphLayoutMap: any = {
 
   }
+  config: any = {
+    //modeBarButtonsToRemove: ["toImage"]
+    toImageButtonOptions: {
+      format: 'svg',
+      scale: 1
+    }
+  }
   categories: string[] = ["HalfLife_POI", "tau_POI", "rss", "AverageRSS"]
   form = this.fb.group({
     hideNotSelected: new FormControl(false),

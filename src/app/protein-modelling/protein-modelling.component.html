@@ -3,7 +3,7 @@
     <h5 class="card-title">{{data.first().Tissue}}</h5>
     <div class="row gap-1">
       <div *ngFor="let e of engines" class="col-4">
-        <plotly-plot (plotlyClick)="OnClick($event)" [data]="graphDataMap[e]" [layout]="graphLayoutMap[e]"  [revision]="revision"></plotly-plot>
+        <plotly-plot [config]="config" (plotlyClick)="OnClick($event)" [data]="graphDataMap[e]" [layout]="graphLayoutMap[e]"  [revision]="revision"></plotly-plot>
       </div>
     </div>
   </div>

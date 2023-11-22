@@ -1,0 +1,19 @@
+<div class="card" *ngIf="data">
+  <div class="card-body">
+    <b class="card-title" *ngIf="web.settings.colorMap[data.Precursor_Id]; else normal" [ngStyle]="{'color': web.settings.colorMap[data.Precursor_Id]}">
+      {{data.Precursor_Id}}
+    </b>
+    <ng-template #normal>
+      <b class="card-title">
+        {{data.Precursor_Id}}
+      </b>
+    </ng-template>
+    <app-scatter-time-plot [data]="data"></app-scatter-time-plot>
+
+    <div>
+      <p>HalfLife POI: {{data.HalfLife_POI}}</p>
+      <p>Engine: {{data.Engine}}</p>
+      <p>Tissue: {{data.Tissue}}</p>
+    </div>
+  </div>
+</div>

@@ -26,7 +26,13 @@ export class CoveragePlotComponent {
     this.form.controls['tissues'].setValue(this.tissues[0])
     this.updateDisplay()
   }
-
+  config: any = {
+    //modeBarButtonsToRemove: ["toImage"]
+    toImageButtonOptions: {
+      format: 'svg',
+      scale: 1
+    }
+  }
   graphData: any[] = []
   graphLayout: any = {
     title: "",
@@ -170,7 +176,6 @@ export class CoveragePlotComponent {
       })
       this.revision += 1
     }
-    console.log(this.graphDataMap)
   }
 
   updateDisplay() {

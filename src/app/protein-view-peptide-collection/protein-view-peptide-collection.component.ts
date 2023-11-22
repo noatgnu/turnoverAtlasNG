@@ -30,14 +30,15 @@ export class ProteinViewPeptideCollectionComponent {
   }
 
   page:number = 1;
-  pageSize: number = 10;
+  pageSize: number = 12;
 
-
+  viewOptions: string[] = ["compact", "full"]
 
   form: FormGroup = this.fb.group({
     filterPrecursorID: new FormControl<string>(""),
     pageSize: new FormControl<number>(10, [Validators.required, Validators.min(1)]),
-    validTAUPOI: new FormControl<boolean>(true)
+    validTAUPOI: new FormControl<boolean>(true),
+    view: new FormControl<string>("compact"),
   })
 
 

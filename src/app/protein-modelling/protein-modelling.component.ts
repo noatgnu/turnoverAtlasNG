@@ -30,7 +30,13 @@ export class ProteinModellingComponent {
   }
   graphDataMap: any = {}
   graphLayoutMap: any = {}
-
+  config: any = {
+    //modeBarButtonsToRemove: ["toImage"]
+    toImageButtonOptions: {
+      format: 'svg',
+      scale: 1
+    }
+  }
   graphData: any[] = []
   graphLayout: any = {
     title: "",

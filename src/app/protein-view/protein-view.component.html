@@ -21,11 +21,8 @@
   <app-coverage-plot [coverageData]="coverageData"></app-coverage-plot>
 </div>
 
-
-
-
 <ng-container *ngIf="!downloading">
-  <div class="container mt-5" *ngIf="filteredData.count() > 0; else empty">
+  <div class="fluid-container mt-5" *ngIf="filteredData.count() > 0; else empty">
     <app-protein-view-peptide-collection [data]="filteredData"></app-protein-view-peptide-collection>
   </div>
   <app-floating-panels [filteredDF]="filteredData"></app-floating-panels>

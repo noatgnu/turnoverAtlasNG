@@ -29,7 +29,16 @@ export class ViolinTimePlotComponent {
     }
 
   }
-
+  config: any = {
+    //modeBarButtonsToRemove: ["toImage"]
+    toImageButtonOptions: {
+      format: 'svg',
+      filename: this.graphLayout.title.text,
+      height: this.graphLayout.height,
+      width: this.graphLayout.width,
+      scale: 1
+    }
+  }
   constructor(private web: WebService) {
     this.web.redrawSubject.subscribe(() => {
       this.drawGraph()
