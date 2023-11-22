@@ -61,6 +61,9 @@ export class Settings {
             kpoolColor: this.kpoolColor,
             scatterPlotXAxisRange: this.scatterPlotXAxisRange,
             scatterPlotYAxisRange: this.scatterPlotYAxisRange,
+            markerColor: this.markerColor,
+            dataDistributionForm: this.dataDistributionForm,
+
         }
     }
 
