@@ -36,6 +36,7 @@ import {AuthInterceptor} from "./auth.interceptor";
 import { SessionSavePromptComponent } from './session-save-prompt/session-save-prompt.component';
 import { SavedSessionsBrowserComponent } from './saved-sessions-browser/saved-sessions-browser.component';
 import { KpoolOnlyPlotComponent } from './kpool-only-plot/kpool-only-plot.component';
+import { PlotSettingsComponent } from './plot-settings/plot-settings.component';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 @NgModule({
@@ -62,7 +63,8 @@ PlotlyModule.plotlyjs = PlotlyJS;
     HomeComponent,
     SessionSavePromptComponent,
     SavedSessionsBrowserComponent,
-    KpoolOnlyPlotComponent
+    KpoolOnlyPlotComponent,
+    PlotSettingsComponent
   ],
     imports: [
         BrowserModule,

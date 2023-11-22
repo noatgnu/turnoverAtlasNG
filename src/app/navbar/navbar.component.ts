@@ -8,6 +8,7 @@ import {ToastService} from "../toast.service";
 import {AccountsService} from "../accounts.service";
 import {SessionSavePromptComponent} from "../session-save-prompt/session-save-prompt.component";
 import {SavedSessionsBrowserComponent} from "../saved-sessions-browser/saved-sessions-browser.component";
+import {PlotSettingsComponent} from "../plot-settings/plot-settings.component";
 
 @Component({
   selector: 'app-navbar',
@@ -103,5 +104,9 @@ export class NavbarComponent {
 
   openSessionBrowser() {
     const ref = this.modal.open(SavedSessionsBrowserComponent, {size: "lg"})
+  }
+
+  openPlotSettings() {
+    const ref = this.modal.open(PlotSettingsComponent)
   }
 }

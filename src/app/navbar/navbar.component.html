@@ -35,6 +35,7 @@
             Session
           </button>
           <div ngbDropdownMenu aria-labelledby="dropdownSession">
+            <button ngbDropdownItem (click)="openPlotSettings()">Plot settings</button>
             <button ngbDropdownItem (click)="save()">Save to computer</button>
             <button ngbDropdownItem (click)="loadSettings.click()">Load from computer</button>
             <button ngbDropdownItem (click)="openSaveSessionHandler()">Save to server</button>

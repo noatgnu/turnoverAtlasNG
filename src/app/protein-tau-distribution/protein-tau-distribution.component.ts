@@ -40,12 +40,19 @@ export class ProteinTauDistributionComponent {
   graphLayoutMap: any = {
 
   }
-
+  categories: string[] = ["HalfLife_POI", "tau_POI", "rss", "AverageRSS"]
   form = this.fb.group({
-    hideNotSelected: new FormControl(false)
+    hideNotSelected: new FormControl(false),
+    category: new FormControl("HalfLife_POI"),
+    log2: new FormControl(true),
+    color: new FormControl("rgba(236,96,99,0.78)"),
   })
 
   constructor(private web: WebService, private fb: FormBuilder) {
+    this.web.restoreSubject.subscribe(() => {
+      this.form.patchValue(this.web.settings.dataDistributionForm)
+      this.drawGraph()
+    })
     this.web.redrawSubject.subscribe(() => {
       this.drawGraph()
     })
@@ -53,59 +60,75 @@ export class ProteinTauDistributionComponent {
   engineList: string[] = []
 
   drawGraph() {
+    this.web.settings.dataDistributionForm = this.form.value
     // draw box plot for tau distribution with y-axis being tau value and x axis being tissue, the box plot should also show individual data points as well with the data points being on the left outside of the box plot
     const temp: any = {}
     this.graphDataMap = {}
     this.graphLayoutMap = {}
-    for (const row of this.data) {
-      if (!(row.Engine in temp)) {
-        temp[row.Engine] = {}
-      }
-      if (!(row.Tissue in temp[row.Engine])) {
-        temp[row.Engine][row.Tissue] = {
-          x: [],
-          y: [],
-          text: [],
-          name: row.Tissue,
-          type: "box",
-          boxpoints: "all",
-          jitter: 0.3,
-          pointpos: -1.8,
-          showlegend: false,
-          marker: {
-            color: [],
-          },
-
-          fillcolor: "rgba(236,96,99,0.78)",
-          hovertemplate: "Tissue: %{x}<br>log2(TAU): %{y}<br>Precursor ID: %{text}<extra></extra>"
+    if (this.form.controls['category'].value) {
+      for (const row of this.data) {
+        if (!(row.Engine in temp)) {
+          temp[row.Engine] = {}
         }
+        // @ts-ignore
+        let y = Math.log2(row[this.form.controls['category'].value])
+        let hovertemplate = "Tissue: %{x}<br>log2("+this.form.controls['category'].value+"): %{y}<br>Precursor ID: %{text}<extra></extra>"
+        if (this.form.controls['log2'].value !== true) {
+          hovertemplate = "Tissue: %{x}<br>"+this.form.controls['category'].value+": %{y}<br>Precursor ID: %{text}<extra></extra>"
+          // @ts-ignore
+          y = row[this.form.controls['category'].value]
+        }
+        if (!(row.Tissue in temp[row.Engine])) {
+          temp[row.Engine][row.Tissue] = {
+            x: [],
+            y: [],
+            text: [],
+            name: row.Tissue,
+            type: "box",
+            boxpoints: "all",
+            jitter: 0.3,
+            pointpos: -1.8,
+            showlegend: false,
+            marker: {
+              color: [],
+            },
 
-      }
-      temp[row.Engine][row.Tissue].x.push(row.Tissue)
-      temp[row.Engine][row.Tissue].y.push(Math.log2(row.tau_POI))
-      if (this.web.settings.selectedMSDataID.includes(row.id)) {
-        if (this.web.settings.searchMap[row.id]) {
+            fillcolor: this.form.value.color,
+            hovertemplate: hovertemplate
+          }
+
+        }
+        temp[row.Engine][row.Tissue].x.push(row.Tissue)
+        temp[row.Engine][row.Tissue].y.push(y)
+        if (this.web.settings.selectedMSDataID.includes(row.id)) {
+          if (this.web.settings.searchMap[row.id]) {
             temp[row.Engine][row.Tissue].marker.color.push(this.web.settings.colorMap[this.web.settings.searchMap[row.id][this.web.settings.searchMap[row.id].length-1]].slice())
-        }
-      } else {
-        if (this.form.value.hideNotSelected) {
-          temp[row.Engine][row.Tissue].marker.color.push("rgba(140,140,140,0)")
+          }
         } else {
-          temp[row.Engine][row.Tissue].marker.color.push("rgba(140,140,140,0.13)")
+          if (this.form.value.hideNotSelected) {
+            temp[row.Engine][row.Tissue].marker.color.push("rgba(140,140,140,0)")
+          } else {
+            temp[row.Engine][row.Tissue].marker.color.push("rgba(140,140,140,0.13)")
+          }
+        }
+        temp[row.Engine][row.Tissue].text.push(row.Precursor_Id)
+      }
+      for (const engine in temp) {
+        if (!(engine in this.graphLayoutMap)) {
+          this.graphLayoutMap[engine] = JSON.parse(JSON.stringify(this.graphLayoutBase))
+          this.graphLayoutMap[engine].yaxis.title = this.form.controls['category'].value
+          if (this.form.controls['log2'].value === true) {
+            this.graphLayoutMap[engine].yaxis.title = "log2("+this.form.controls['category'].value+")"
+          }
+          this.graphLayoutMap[engine].title = engine
+          this.graphDataMap[engine] = []
+        }
+        for (const tissue in temp[engine]) {
+          this.graphDataMap[engine].push(temp[engine][tissue])
         }
       }
-      temp[row.Engine][row.Tissue].text.push(row.Precursor_Id)
     }
-    for (const engine in temp) {
-      if (!(engine in this.graphLayoutMap)) {
-        this.graphLayoutMap[engine] = Object.assign({}, this.graphLayoutBase)
-        this.graphLayoutMap[engine].title = engine
-        this.graphDataMap[engine] = []
-      }
-      for (const tissue in temp[engine]) {
-        this.graphDataMap[engine].push(temp[engine][tissue])
-      }
-    }
+
     this.engineList = Object.keys(this.graphLayoutMap)
     this.revision += 1
   }

@@ -31,7 +31,17 @@ export class Settings {
     sampleMap: {[key: string]: Sample} = {}
     baseUrl = environment.baseUrl
     selectedSamples: string[] = []
+    markerColor: string = "rgb(55, 128, 191)"
+    scatterPlotMarkerSize: number = 10
+    upperBoundPulseColor: string = "rgb(155,41,113)"
+    lowerBoundPulseColor: string = "rgb(41,155,43)"
+    pulseColor: string = "rgb(55, 128, 191)"
+    kpoolColor: string = "rgb(219, 64, 82)"
+    scatterPlotXAxisRange: number[] = [0, 50]
+    scatterPlotYAxisRange: number[] = [0, 1]
+    dataDistributionForm: any = {
 
+    }
     export() {
         return {
             currentProteinGroup: this.currentProteinGroup,
@@ -44,6 +54,13 @@ export class Settings {
             sampleMap: this.sampleMap,
             baseUrl: this.baseUrl,
             selectedSamples: this.selectedSamples,
+            scatterPlotMarkerSize: this.scatterPlotMarkerSize,
+            upperBoundPulseColor: this.upperBoundPulseColor,
+            lowerBoundPulseColor: this.lowerBoundPulseColor,
+            pulseColor: this.pulseColor,
+            kpoolColor: this.kpoolColor,
+            scatterPlotXAxisRange: this.scatterPlotXAxisRange,
+            scatterPlotYAxisRange: this.scatterPlotYAxisRange,
         }
     }
 

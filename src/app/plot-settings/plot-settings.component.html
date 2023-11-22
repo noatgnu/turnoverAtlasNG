@@ -1,0 +1,66 @@
+<div class="modal-header">
+  <h5 class="modal-title">Plot Settings</h5>
+</div>
+<div class="modal-body">
+  <form [formGroup]="form">
+    <b>Time vs H+H/L</b>
+    <div class="d-flex gap-2">
+      <div class="form-group">
+        <label for="xmin">
+          X axis min
+        </label>
+        <input type="number" class="form-control" id="xmin" formControlName="scatterPlotXAxisRangeMin">
+      </div>
+      <div class="form-group">
+        <label for="xmax">
+          X axis max
+        </label>
+        <input type="number" class="form-control" id="xmax" formControlName="scatterPlotXAxisRangeMax">
+      </div>
+    </div>
+    <div class="d-flex gap-2">
+      <div class="form-group">
+        <label for="ymin">
+          Y axis min
+        </label>
+        <input type="number" class="form-control" id="ymin" formControlName="scatterPlotYAxisRangeMin">
+      </div>
+      <div class="form-group">
+        <label for="ymax">
+          Y axis max
+        </label>
+        <input type="number" class="form-control" id="ymax" formControlName="scatterPlotYAxisRangeMax">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="markerSize">
+        Dot point marker size
+      </label>
+      <input type="number" class="form-control" id="markerSize" formControlName="scatterPlotMarkerSize" style="width: 100px">
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      <ngx-colors ngx-colors-trigger formControlName="markerColor"></ngx-colors>
+      <label>Dot point color</label>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      <ngx-colors ngx-colors-trigger formControlName="kpoolColor"></ngx-colors>
+      <label>Kpool color</label>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      <ngx-colors ngx-colors-trigger formControlName="upperBoundColor"></ngx-colors>
+      <label>Upper bound color</label>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      <ngx-colors ngx-colors-trigger formControlName="lowerBoundColor"></ngx-colors>
+      <label>Lower bound color</label>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      <ngx-colors ngx-colors-trigger formControlName="pulseColor"></ngx-colors>
+      <label>Pulse color</label>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="close()">Close</button>
+  <button type="button" class="btn btn-primary" (click)="save()">Save changes</button>
+</div>

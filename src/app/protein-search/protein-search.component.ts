@@ -20,6 +20,13 @@ export class ProteinSearchComponent {
     proteotypic: new FormControl<boolean>(false),
     minSamplesDetected: new FormControl<number>(1),
     minTimepointsDetected: new FormControl<number>(1),
+    rssThreshold: new FormControl<number|null>(null),
+    rssAverageThreshold: new FormControl<number|null>(null),
+    maxRSS: new FormControl<number|null>(null),
+    maxAverageRSS: new FormControl<number|null>(null),
+    halflifeThreshold: new FormControl<number|null>(null),
+    maxHalfLife: new FormControl<number|null>(null),
+
   })
 
   formExperimentParameters: FormGroup = this.fb.group({
@@ -67,13 +74,68 @@ export class ProteinSearchComponent {
   reloadData() {
     this.toastService.show("Data formating", "Filtering data")
     this.filteredDF = this.data.where((row) => {
-      return this.form.controls['tissues'].value.includes(row.Tissue) && this.form.controls['engines'].value.includes(row.Engine) && row.n_Samples >= this.form.controls['minSamplesDetected'].value && row.n_TimePoints >= this.form.controls['minTimepointsDetected'].value && this.checkIfDataIsDetectedInSelectedSamples(row.values)
+      return this.form.controls['tissues'].value.includes(row.Tissue)
+        && this.form.controls['engines'].value.includes(row.Engine)
+        && row.n_Samples >= this.form.controls['minSamplesDetected'].value
+        && row.n_TimePoints >= this.form.controls['minTimepointsDetected'].value
+        && this.checkIfDataIsDetectedInSelectedSamples(row.values)
     })
     if (this.form.controls['proteotypic'].value) {
       this.filteredDF = this.filteredDF.where((row) => {
         return row.Proteotypic == 1
       })
     }
+
+    if (this.form.controls['rssThreshold'].value !== null) {
+      this.filteredDF = this.filteredDF.where((row) => {
+        if (row.rss === null) {
+          return false
+        }
+        return row.rss >= this.form.controls['rssThreshold'].value
+      })
+    }
+    if (this.form.controls['halflifeThreshold'].value !== null) {
+      this.filteredDF = this.filteredDF.where((row) => {
+        if (row.HalfLife_POI === null) {
+          return false
+        }
+        return row.HalfLife_POI >= this.form.controls['halflifeThreshold'].value
+      })
+    }
+    if (this.form.controls['rssAverageThreshold'].value !== null) {
+      this.filteredDF = this.filteredDF.where((row) => {
+        if (row.AverageRSS === null) {
+          return false
+        }
+        return row.AverageRSS >= this.form.controls['rssAverageThreshold'].value
+      })
+    }
+
+    if (this.form.controls['maxRSS'].value !== null) {
+      this.filteredDF = this.filteredDF.where((row) => {
+        if (row.rss === null) {
+          return false
+        }
+        return row.rss <= this.form.controls['maxRSS'].value
+      })
+    }
+    if (this.form.controls['maxAverageRSS'].value !== null) {
+      this.filteredDF = this.filteredDF.where((row) => {
+        if (row.AverageRSS === null) {
+          return false
+        }
+        return row.AverageRSS <= this.form.controls['maxAverageRSS'].value
+      })
+    }
+    if (this.form.controls['maxHalfLife'].value !== null) {
+      this.filteredDF = this.filteredDF.where((row) => {
+        if (row.HalfLife_POI === null) {
+          return false
+        }
+        return row.HalfLife_POI <= this.form.controls['maxHalfLife'].value
+      })
+    }
+
     this.filteredDF = this.filteredDF.bake()
     this.web.settings.form = this.form.value
     this.web.settings.formExperimentParameters = this.formExperimentParameters.value

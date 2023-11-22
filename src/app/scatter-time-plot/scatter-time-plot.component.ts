@@ -20,11 +20,11 @@ export class ScatterTimePlotComponent {
     title: "Scatter Time Plot",
     xaxis: {
       title: "Time (days)",
-      range: [0, 50]
+      range: this.web.settings.scatterPlotXAxisRange
     },
     yaxis: {
       title: "H + H/L",
-      range: [0, 1.5]
+      range: this.web.settings.scatterPlotYAxisRange
     }
   }
 
@@ -47,7 +47,8 @@ export class ScatterTimePlotComponent {
         type: 'scatter',
         name: 'H + H/L Experimental',
         marker: {
-          size: 12
+          size: this.web.settings.scatterPlotMarkerSize,
+          color: this.web.settings.markerColor,
         },
       }
       for (const i of this._data.values) {
@@ -71,10 +72,8 @@ export class ScatterTimePlotComponent {
       if (!days.includes(0)) {
         days.push(0)
       }
-      days = days.sort((a,b) => a-b)
       graphData.push(temp)
 
-      let modelResult: any
       if (this._data.tau_POI !== null) {
         const pulseModel: any = {
           x: [0],
@@ -82,7 +81,7 @@ export class ScatterTimePlotComponent {
           mode: 'lines',
           name: 'Pulse Model',
           line: {
-            color: 'rgb(55, 128, 191)',
+            color: this.web.settings.pulseColor,
             shape: 'spline',
           }
         }
@@ -93,7 +92,7 @@ export class ScatterTimePlotComponent {
           name: 'Pulse Model Upper Bound',
           line: {
             shape: 'spline',
-            color: 'rgb(155,41,113)',
+            color: this.web.settings.upperBoundPulseColor,
           }
         }
 
@@ -104,7 +103,7 @@ export class ScatterTimePlotComponent {
           name: 'Pulse Model Lower Bound',
           line: {
             shape: 'spline',
-            color: 'rgb(41,155,43)',
+            color: this.web.settings.lowerBoundPulseColor,
           }
         }
 
@@ -128,7 +127,7 @@ export class ScatterTimePlotComponent {
           mode: 'lines',
           name: 'Kpool Model',
           line: {
-            color: 'rgb(219, 64, 82)',
+            color: this.web.settings.kpoolColor,
             shape: 'spline',
           }
         }
