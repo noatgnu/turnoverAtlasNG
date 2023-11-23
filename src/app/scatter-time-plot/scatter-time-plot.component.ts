@@ -94,16 +94,7 @@ export class ScatterTimePlotComponent {
       graphData.push(temp)
 
       if (this._data.tau_POI !== null) {
-        const pulseModel: any = {
-          x: [],
-          y: [],
-          mode: 'lines',
-          name: 'Pulse Model',
-          line: {
-            color: this.web.settings.pulseColor,
-            shape: 'spline',
-          }
-        }
+
         const uppderBound: any = {
           x: [],
           y: [],
@@ -113,9 +104,19 @@ export class ScatterTimePlotComponent {
             shape: 'spline',
             color: this.web.settings.upperBoundPulseColor,
           },
-          fill: 'tonexty',
+          fill: 'tonextx',
         }
-
+        const pulseModel: any = {
+          x: [],
+          y: [],
+          mode: 'lines',
+          name: 'Pulse Model',
+          line: {
+            color: this.web.settings.pulseColor,
+            shape: 'spline',
+          },
+          fill: 'tonextx',
+        }
         const lowerBound: any = {
           x: [],
           y: [],
@@ -125,19 +126,20 @@ export class ScatterTimePlotComponent {
             shape: 'spline',
             color: this.web.settings.lowerBoundPulseColor,
           },
-          fill: 'tonexty',
+          fill: 'tonextx',
         }
 
         for (const i of this._data.tau_model) {
+          lowerBound.x.push(i.day)
+          lowerBound.y.push(i.tau_POI_lower_bound)
           pulseModel.x.push(i.day)
           pulseModel.y.push(i.value)
           uppderBound.x.push(i.day)
           uppderBound.y.push(i.tau_POI_upper_bound)
-          lowerBound.x.push(i.day)
-          lowerBound.y.push(i.tau_POI_lower_bound)
+
         }
         //graphData.push(kpoolModel)
-        graphData.push(pulseModel)
+
         if (uppderBound.y.length > 1) {
           let count = 0
           for (const i of uppderBound.y) {
@@ -150,6 +152,7 @@ export class ScatterTimePlotComponent {
             graphData.push(uppderBound)
           }
         }
+        graphData.push(pulseModel)
         if (lowerBound.y.length > 1) {
           // check if more than half is below 0
           let count = 0
@@ -162,7 +165,6 @@ export class ScatterTimePlotComponent {
           if (count < lowerBound.y.length / 2) {
             graphData.push(lowerBound)
           }
-
         }
         const kpoolData = await this.web.getKpool(this._data.Tissue, this._data.Engine, 1, 0, 51).toPromise()
 
