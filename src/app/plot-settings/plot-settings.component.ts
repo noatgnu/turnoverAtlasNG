@@ -30,10 +30,12 @@ export class PlotSettingsComponent {
 
   constructor(private fb: FormBuilder, private web: WebService, private modal: NgbActiveModal) {
     const temp: any = {}
+    const kPoolOnlyList: string[] = []
     for (const i in this.web.settings.kpoolOnlyColorMap) {
-      this.kPoolOnlyList.push(i)
+      kPoolOnlyList.push(i)
       temp[i] = [this.web.settings.kpoolOnlyColorMap[i],]
     }
+    this.kPoolOnlyList = kPoolOnlyList
     this.formKpoolOnly = this.fb.group(temp)
     console.log(this.formKpoolOnly)
   }
