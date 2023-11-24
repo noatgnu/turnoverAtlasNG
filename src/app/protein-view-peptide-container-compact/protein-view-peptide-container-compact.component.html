@@ -11,9 +11,11 @@
     <app-scatter-time-plot [data]="data"></app-scatter-time-plot>
 
     <div>
-      <p><b>HalfLife POI: {{data.HalfLife_POI|number: ".0-1"}}</b></p>
-      <p>Engine: {{data.Engine}}</p>
-      <p>Tissue: {{data.Tissue}}</p>
+      <p><b>HalfLife POI: {{data.HalfLife_POI|number: ".0-1"}}</b><br>
+      RSS: {{data.rss|number: ".0-4"}}<br>
+      Avg.RSS: {{data.AverageRSS|number: ".0-4"}}<br>
+      Engine: {{data.Engine}}<br>
+      Tissue: {{data.Tissue}}</p>
     </div>
   </div>
 </div>
