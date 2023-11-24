@@ -24,6 +24,7 @@ export class WebService {
   restoreSubject: Subject<boolean> = new Subject<boolean>()
   filteredDF: IDataFrame<number, MSData> = new DataFrame()
   initializeModelParameters: Subject<boolean> = new Subject<boolean>()
+  histograms: {Tissue: string, Engine: string, value: number[], bins: number[]}[] = []
   constructor(private http: HttpClient, private toastService: ToastService) { }
 
   searchProtein(proteinGroup: string, distinct: boolean = true) {
@@ -204,5 +205,27 @@ export class WebService {
 
   getKpool(tissue: string, engine: string, step: 1, start: 0, end: 51) {
     return this.http.get<any>(`${this.baseUrl}/api/modelling/`, {responseType: 'json', observe: 'body', params: {tissue: tissue, engine: engine, step: step, start: start, end: end}})
+  }
+
+  getStats(groupby: string = "Tissue,Engine", include_shared: boolean = false, distinct: string = "", valid_tau: boolean = true) {
+    let params: any = {groupby: groupby}
+    if (include_shared) {
+      params["include_shared"] = "True"
+    } else {
+      params["include_shared"] = "False"
+    }
+    if (distinct !== "") {
+      params["distinct"] = distinct
+    }
+    if (valid_tau) {
+      params["valid_tau"] = "True"
+    } else {
+      params["valid_tau"] = "False"
+    }
+    return this.http.get<any>(`${this.baseUrl}/api/turnoverdata/get_stats/`, {responseType: 'json', observe: 'body', params: params})
+  }
+
+  getHistogram() {
+    return this.http.get<any>(`${this.baseUrl}/api/turnoverdata/get_histogram/`, {responseType: 'json', observe: 'body'})
   }
 }

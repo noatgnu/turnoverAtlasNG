@@ -53,7 +53,7 @@
     <div class="flex-grow-1 p-2">
       <div class="card border-2 border-black">
         <div class="card-body">
-          <h5 class="card-title">Database parameters</h5>
+          <h5 class="card-title">Database</h5>
           <ul ngbNav #nav="ngbNav" [(activeId)]="activeId" class="nav-tabs">
             <li [ngbNavItem]="1">
               <button ngbNavLink>Modelling parameters</button>
@@ -125,6 +125,18 @@
                   </ng-container>
                   </tbody>
                 </table>
+              </ng-template>
+            </li>
+            <li [ngbNavItem]="2">
+              <button ngbNavLink>Identification distribution</button>
+              <ng-template ngbNavContent>
+                <app-database-stats></app-database-stats>
+              </ng-template>
+            </li>
+            <li [ngbNavItem]="3">
+              <button ngbNavLink>TAU database distribution</button>
+              <ng-template ngbNavContent>
+                <app-tau-database-distribution></app-tau-database-distribution>
               </ng-template>
             </li>
           </ul>

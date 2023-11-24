@@ -38,6 +38,9 @@ import { SavedSessionsBrowserComponent } from './saved-sessions-browser/saved-se
 import { KpoolOnlyPlotComponent } from './kpool-only-plot/kpool-only-plot.component';
 import { PlotSettingsComponent } from './plot-settings/plot-settings.component';
 import { ProteinViewPeptideContainerCompactComponent } from './protein-view-peptide-container-compact/protein-view-peptide-container-compact.component';
+import { DatabaseStatsComponent } from './database-stats/database-stats.component';
+import { TauDatabaseDistributionComponent } from './tau-database-distribution/tau-database-distribution.component';
+import { TauHistogramComponent } from './tau-histogram/tau-histogram.component';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 @NgModule({
@@ -66,7 +69,10 @@ PlotlyModule.plotlyjs = PlotlyJS;
     SavedSessionsBrowserComponent,
     KpoolOnlyPlotComponent,
     PlotSettingsComponent,
-    ProteinViewPeptideContainerCompactComponent
+    ProteinViewPeptideContainerCompactComponent,
+    DatabaseStatsComponent,
+    TauDatabaseDistributionComponent,
+    TauHistogramComponent
   ],
     imports: [
         BrowserModule,

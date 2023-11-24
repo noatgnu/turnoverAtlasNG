@@ -1,0 +1,26 @@
+<form [formGroup]="form">
+  <div class="form-check">
+    <input class="form-check-input" type="checkbox" name="include_shared" id="include_shared" value="1" formControlName="include_shared">
+    <label class="form-check-label" for="include_shared">
+      Include shared peptides
+    </label>
+  </div>
+  <div class="form-check">
+    <input class="form-check-input" type="checkbox" name="include_shared" id="valid_tau" value="1" formControlName="valid_tau">
+    <label class="form-check-label" for="valid_tau">
+      Valid halflife only
+    </label>
+  </div>
+</form>
+
+<div class="d-flex justify-content-center">
+  <plotly-plot [data]="barGraphData" [layout]="barGraphLayout" [updateOnlyWithRevision]="true" [revision]="revision" *ngIf="data.length > 0; else loading"></plotly-plot>
+</div>
+
+<div class="d-flex justify-content-center">
+  <plotly-plot [data]="barChartData2" [layout]="barChartLayout2" [updateOnlyWithRevision]="true" [revision]="revision2" *ngIf="data2.length > 0; else loading"></plotly-plot>
+</div>
+
+<ng-template #loading>
+  <ngb-progressbar type="info" [value]="100" [striped]="true" [animated]="true" style="width: 500px" class="mt-5">Loading...</ngb-progressbar>
+</ng-template>
