@@ -11,13 +11,13 @@ export class KpoolOnlyPlotComponent {
   private _data: ModelParameters[] = []
   graphData: any[] = []
   graphLayout: any = {
-    title: "Kpool",
+    title: "Free Lys Pool",
     xaxis: {
       title: "Days",
       range: [0, 50]
     },
     yaxis: {
-      title: "H + H/L",
+      title: "H/(H+L)",
       range: [0, 1]
     }
   }

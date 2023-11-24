@@ -27,15 +27,44 @@ export class ScatterTimePlotComponent {
 
     xaxis: {
       title: "",
-      range: this.web.settings.scatterPlotXAxisRange
+      range: this.web.settings.scatterPlotXAxisRange,
+      showgrid: false,
+      zeroline: false,
     },
     yaxis: {
-      title: "H + H/L",
-      range: this.web.settings.scatterPlotYAxisRange
+      title: "H/(H+L)",
+      range: this.web.settings.scatterPlotYAxisRange,
+      ticklen: 5,
+      showgrid: false,
+      zeroline: false,
     },
     legend: {
       orientation: 'h'
     },
+    shapes: [
+      {
+        type: 'line',
+        x0: this.web.settings.scatterPlotXAxisRange[0],
+        y0: this.web.settings.scatterPlotYAxisRange[0],
+        x1: this.web.settings.scatterPlotXAxisRange[1],
+        y1: this.web.settings.scatterPlotYAxisRange[0],
+        line: {
+          color: "black",
+          width: 2,
+        },
+      },
+      {
+        type: 'line',
+        x0: this.web.settings.scatterPlotXAxisRange[0],
+        y0: this.web.settings.scatterPlotYAxisRange[0],
+        x1: this.web.settings.scatterPlotXAxisRange[0],
+        y1: this.web.settings.scatterPlotYAxisRange[1],
+        line: {
+          color: "black",
+          width: 2,
+        },
+      },
+    ]
   }
   config: any = {
     //modeBarButtonsToRemove: ["toImage"]
@@ -64,11 +93,16 @@ export class ScatterTimePlotComponent {
         y: [],
         mode: 'markers',
         type: 'scatter',
-        name: 'H + H/L Experimental',
+        name: 'Data point',
         marker: {
           size: this.web.settings.scatterPlotMarkerSize,
           color: this.web.settings.markerColor,
+          line: {
+            color: "black",
+            width: 1
+          }
         },
+
       }
       for (const i of this._data.values) {
         if (this.web.settings.selectedSamples.includes(i.Sample_Name)) {
@@ -92,14 +126,13 @@ export class ScatterTimePlotComponent {
         days.push(0)
       }
       graphData.push(temp)
-
       if (this._data.tau_POI !== null) {
 
         const uppderBound: any = {
           x: [],
           y: [],
           mode: 'lines',
-          name: 'Pulse Model Upper Bound',
+          name: 'Upper Bound',
           line: {
             shape: 'spline',
             color: this.web.settings.upperBoundPulseColor,
@@ -110,23 +143,21 @@ export class ScatterTimePlotComponent {
           x: [],
           y: [],
           mode: 'lines',
-          name: 'Pulse Model',
+          name: 'Turnover Fit',
           line: {
             color: this.web.settings.pulseColor,
             shape: 'spline',
           },
-          fill: 'tonextx',
         }
         const lowerBound: any = {
           x: [],
           y: [],
           mode: 'lines',
-          name: 'Pulse Model Lower Bound',
+          name: 'Lower Bound',
           line: {
             shape: 'spline',
             color: this.web.settings.lowerBoundPulseColor,
           },
-          fill: 'tonextx',
         }
 
         for (const i of this._data.tau_model) {
@@ -139,6 +170,22 @@ export class ScatterTimePlotComponent {
 
         }
         //graphData.push(kpoolModel)
+        const pulsemodelWithoutName = JSON.parse(JSON.stringify(pulseModel))
+        pulsemodelWithoutName.showlegend = false
+        graphData.push(pulsemodelWithoutName)
+        if (lowerBound.y.length > 1) {
+          // check if more than half is below 0
+          let count = 0
+          for (const i of lowerBound.y) {
+            if (i < 0) {
+              count += 1
+            }
+          }
+
+          if (count < lowerBound.y.length / 2) {
+            graphData.push(lowerBound)
+          }
+        }
 
         if (uppderBound.y.length > 1) {
           let count = 0
@@ -153,26 +200,14 @@ export class ScatterTimePlotComponent {
           }
         }
         graphData.push(pulseModel)
-        if (lowerBound.y.length > 1) {
-          // check if more than half is below 0
-          let count = 0
-          for (const i of lowerBound.y) {
-            if (i < 0) {
-              count += 1
-            }
-          }
 
-          if (count < lowerBound.y.length / 2) {
-            graphData.push(lowerBound)
-          }
-        }
         const kpoolData = await this.web.getKpool(this._data.Tissue, this._data.Engine, 1, 0, 51).toPromise()
 
         const kpoolModel: any = {
           x: [],
           y: [],
           mode: 'lines',
-          name: 'Kpool Model',
+          name: 'Free Lys Pool',
           line: {
             color: this.web.settings.kpoolColor,
             shape: 'spline',
@@ -184,6 +219,7 @@ export class ScatterTimePlotComponent {
           kpoolModel.y.push(i.value)
         }
         graphData.push(kpoolModel)
+
         // try {
         //   modelResult = await this.web.postModellingData(this._data.Tissue, this._data.Engine, this._data.tau_POI, this._data.tau_POI_upper_bound, this._data.tau_POI_lower_bound, days).toPromise()
         //   const kpoolModel: any = {

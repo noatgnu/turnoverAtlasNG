@@ -31,14 +31,14 @@ export class Settings {
     sampleMap: {[key: string]: Sample} = {}
     baseUrl = environment.baseUrl
     selectedSamples: string[] = []
-    markerColor: string = "rgb(55, 128, 191)"
-    scatterPlotMarkerSize: number = 10
-    upperBoundPulseColor: string = "rgb(155,41,113)"
-    lowerBoundPulseColor: string = "rgb(41,155,43)"
-    pulseColor: string = "rgb(55, 128, 191)"
-    kpoolColor: string = "rgb(219, 64, 82)"
-    scatterPlotXAxisRange: number[] = [0, 50]
-    scatterPlotYAxisRange: number[] = [0, 1]
+    markerColor: string = "rgb(155,41,113)"
+    scatterPlotMarkerSize: number = 8
+    upperBoundPulseColor: string = "rgb(55,191,171)"
+    lowerBoundPulseColor: string =  "rgb(55,191,171)"
+    pulseColor: string = "rgb(155,41,113)"
+    kpoolColor: string = "rgb(255,140,162)"
+    scatterPlotXAxisRange: number[] = [-50/20, 51]
+    scatterPlotYAxisRange: number[] = [-1/20, 1]
     dataDistributionForm: any = {
 
     }
