@@ -14,10 +14,13 @@ export class ScatterTimePlotComponent {
     this.drawGraph()
   }
 
+
+
   graphData: any[] = []
 
   graphLayout: any = {
     title: "Scatter Time Plot",
+    width: 450,
     margin: {
       l: 50,
       r: 50,

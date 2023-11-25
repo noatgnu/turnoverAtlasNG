@@ -14,6 +14,7 @@ export class ProteinViewPeptideCollectionComponent {
   displayDF: IDataFrame<number, MSData> = new DataFrame()
 
   precursorID: string[] = []
+
   @Input() set data (value: IDataFrame<number, MSData>) {
     this._data = value
 

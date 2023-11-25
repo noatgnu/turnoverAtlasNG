@@ -40,6 +40,7 @@ export class ProteinSearchComponent {
     this._data = value
     this.tissues = this._data.getSeries("Tissue").distinct().toArray()
     this.engines = this._data.getSeries("Engine").distinct().toArray()
+
     this.form.controls['tissues'].setValue(this.tissues)
     this.form.controls['engines'].setValue(this.engines)
     // assign color to engines
@@ -139,6 +140,9 @@ export class ProteinSearchComponent {
     this.filteredDF = this.filteredDF.bake()
     this.web.settings.form = this.form.value
     this.web.settings.formExperimentParameters = this.formExperimentParameters.value
+    this.web.tissues = this.filteredDF.getSeries("Tissue").distinct().toArray()
+    this.web.engines = this.filteredDF.getSeries("Engine").distinct().toArray()
+    this.web.strippedSequences = this.filteredDF.getSeries("Stripped_Sequence").distinct().toArray()
     this.filteredData.emit(this.filteredDF)
   }
 

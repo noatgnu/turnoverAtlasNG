@@ -42,6 +42,7 @@ import { DatabaseStatsComponent } from './database-stats/database-stats.componen
 import { TauDatabaseDistributionComponent } from './tau-database-distribution/tau-database-distribution.component';
 import { TauHistogramComponent } from './tau-histogram/tau-histogram.component';
 import { ProteinSummaryComponent } from './protein-summary/protein-summary.component';
+import { FilterPresetComponent } from './filter-preset/filter-preset.component';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 @NgModule({
@@ -74,7 +75,8 @@ PlotlyModule.plotlyjs = PlotlyJS;
     DatabaseStatsComponent,
     TauDatabaseDistributionComponent,
     TauHistogramComponent,
-    ProteinSummaryComponent
+    ProteinSummaryComponent,
+    FilterPresetComponent
   ],
     imports: [
         BrowserModule,

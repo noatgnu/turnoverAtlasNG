@@ -42,6 +42,8 @@ export class Settings {
     dataDistributionForm: any = {
 
     }
+    filters: any[] = []
+
     export() {
         return {
             currentProteinGroup: this.currentProteinGroup,
@@ -63,6 +65,7 @@ export class Settings {
             scatterPlotYAxisRange: this.scatterPlotYAxisRange,
             markerColor: this.markerColor,
             dataDistributionForm: this.dataDistributionForm,
+          filters: this.filters,
 
         }
     }
@@ -87,5 +90,29 @@ export class Settings {
         document.body.removeChild(element);
     }
 
+  addFilter(value: any) {
+    if (value.filterName === "") {
+      const filterName = []
+      if (value.tissues.length > 0) {
+        filterName.push(value.tissues.join(", "))
+      }
+      if (value.engines.length > 0) {
+        filterName.push(value.engines.join(", "))
+      }
+      value.filterName = filterName.join(" | ")
+    }
+    if (value.filterName === "") {
+      value.filterName = value.sequences.slice(0, 3).join(", ")
+    }
+    value.id = crypto.randomUUID()
+    console.log(value.id)
+    this.filters.push(value)
+    return value
+  }
 
+  removeFilter(id: string) {
+    this.filters = this.filters.filter((f) => {
+      return f.id !== id
+    })
+  }
 }

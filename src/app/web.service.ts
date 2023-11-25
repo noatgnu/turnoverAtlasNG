@@ -17,13 +17,16 @@ import {environment} from "../environments/environment";
 export class WebService {
   settings: Settings = new Settings()
   baseUrl = environment.baseUrl
-
+  tissues: string[] = []
+  engines: string[] = []
+  strippedSequences: string[] = []
   redrawSubject: Subject<boolean> = new Subject<boolean>()
   modelParameters: ModelParameters[] = []
   selectionSubject: Subject<boolean> = new Subject<boolean>()
   restoreSubject: Subject<boolean> = new Subject<boolean>()
   initializeModelParameters: Subject<boolean> = new Subject<boolean>()
   largestHistogramValue: number = 0
+  filters: any[] = []
   constructor(private http: HttpClient, private toastService: ToastService) { }
 
   searchProtein(proteinGroup: string, distinct: boolean = true) {

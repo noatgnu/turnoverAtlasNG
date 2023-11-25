@@ -35,6 +35,11 @@ export class ProteinViewComponent {
   //modellingDataGroup: ISeries<number, IDataFrame<number, Modelling>> = new Series()
   modellingDataGroup: ISeries<number, IDataFrame<number, MSData>> = new Series()
   coverageData: SequenceCoverage|undefined = undefined
+
+  activeId: number = 1
+  filterDFMap: {[key: string]: IDataFrame<number, MSData>} = {}
+
+  ready: boolean = false
   @Input() set proteinGroup(value: string) {
     this.initialize(value).then(() => {
       this.web.getMSData(this.protein).subscribe((data) => {
@@ -77,6 +82,7 @@ export class ProteinViewComponent {
   }
 
   handlerFilterDFUpdate(value: IDataFrame<number, MSData>) {
+    this.ready = false
     this.filteredData = value
 
     const ids: number[] = value.getSeries("id").bake().toArray()
@@ -103,6 +109,12 @@ export class ProteinViewComponent {
       //   console.log(this.modellingData)
       // })
     }
+    if (this.web.settings.filters.length > 0) {
+      for (const filter of this.web.settings.filters) {
+        this.filterDFMap[filter.id] = this.updateFilterDFMap(filter)
+      }
+    }
+    this.ready = true
   }
 
   async initialize(value: any) {
@@ -113,5 +125,44 @@ export class ProteinViewComponent {
       this.web.settings.import(settings.details)
       this.toastService.show("Session load", "Session loaded successfully")
     }
+  }
+
+  handleSubFilter(filter: any) {
+    let f = JSON.parse(JSON.stringify(filter))
+    f = this.web.settings.addFilter(f)
+    this.filterDFMap[f.id] = this.updateFilterDFMap(f)
+  }
+
+  updateFilterDFMap(filter: any) {
+    let filterDF = this.filteredData.where((row) => {
+      return row.Tissue !== null
+    })
+    if (filter.tissues.length > 0) {
+      filterDF = filterDF.where((row) => {
+        return filter.tissues.includes(row.Tissue)
+      })
+    }
+    if (filter.engines.length > 0) {
+      filterDF = filterDF.where((row:MSData) => {
+        return filter.engines.includes(row.Engine)
+      })
+    }
+    if (filter.sequences.length >0) {
+      filterDF = filterDF.where((row:MSData) => {
+        return filter.sequences.includes(row.Stripped_Sequence)
+      })
+    }
+    filterDF = filterDF.bake()
+    return filterDF
+  }
+
+  removeFilter(id: string) {
+    this.ready = false
+    // reorganize the filter index
+    this.web.settings.removeFilter(id)
+    delete this.filterDFMap[id]
+    this.ready = true
+    console.log(this.web.settings.filters)
+    console.log(this.filterDFMap)
   }
 }

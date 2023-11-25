@@ -1,0 +1,56 @@
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title">Sub-filter Preset</h5>
+    <form [formGroup]="form">
+      <div class="d-flex justify-content-start gap-2">
+        <div class="form-group">
+          <label for="tissues">Tissues</label>
+          <select class="form-control" id="tissues" formControlName="tissues" multiple>
+            <option *ngFor="let tissue of tissues" [value]="tissue">{{tissue}}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="engines">Engines</label>
+          <select class="form-control" id="engines" formControlName="engines" multiple>
+            <option *ngFor="let engine of engines" [value]="engine">{{engine}}</option>
+          </select>
+        </div>
+        <div class="d-flex gap-2">
+          <div class="form-group">
+            <label for="sequence">Stripped sequences</label>
+            <select class="form-control" id="sequence" formControlName="sequences" multiple>
+              <option *ngFor="let sequence of sequences" [value]="sequence">{{sequence}}</option>
+            </select>
+          </div>
+          <div>
+            <div class="form-group">
+              <label for="filterName">
+                Preset Name
+              </label>
+              <input type="text" class="form-control" id="filterName" formControlName="filterName">
+            </div>
+            <button type="button" class="btn btn-primary mt-2" (click)="addSequence()">Add sequence</button>
+
+          </div>
+        </div>
+
+      </div>
+    </form>
+    <div *ngIf="selectedSequences.length >0" class="mt-2">
+      Selected sequences:
+      <div class="d-flex flex-wrap gap-3">
+        <div *ngFor="let s of selectedSequences">
+          <span class="badge bg-info" (click)="removeFromSelectedList(s)">{{s}}</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="card-footer">
+    <div class="d-flex gap-2">
+      <button type="button" class="btn btn-primary" (click)="applyFilter()">Apply</button>
+      <button type="button" class="btn btn-secondary" (click)="resetFilter()">Reset</button>
+    </div>
+
+  </div>
+</div>

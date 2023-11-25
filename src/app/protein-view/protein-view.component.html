@@ -22,8 +22,28 @@
 </div>
 
 <ng-container *ngIf="!downloading">
-  <div class="fluid-container mt-5" *ngIf="filteredData.count() > 0; else empty">
-    <app-protein-view-peptide-collection [data]="filteredData"></app-protein-view-peptide-collection>
+  <div class="container mt-5" *ngIf="filteredData.count() > 0">
+    <app-filter-preset [engines]="web.engines" [tissues]="web.tissues" [sequences]="web.strippedSequences" (filterOutput)="handleSubFilter($event)"></app-filter-preset>
+  </div>
+
+  <div class="fluid-container mt-5" *ngIf="filteredData.count() > 0 && ready; else empty">
+    <div ngbNav class="nav-tabs" [(activeId)]="activeId" #nav="ngbNav">
+      <ng-container ngbNavItem [ngbNavItem]="1">
+        <button ngbNavLink>Without sub-filter ({{filteredData.count()}})</button>
+        <ng-template ngbNavContent>
+          <app-protein-view-peptide-collection [data]="filteredData"></app-protein-view-peptide-collection>
+        </ng-template>
+      </ng-container>
+      <ng-container *ngIf="web.settings.filters.length > 0">
+        <ng-container *ngFor="let filter of web.settings.filters" [ngbNavItem]="filter.id" [destroyOnHide]="true">
+          <button ngbNavLink>{{filter.filterName}} ({{filterDFMap[filter.id].count()}}) <span class="btn-close ms-3 fw-light" (click)="removeFilter(filter.id)"></span></button>
+          <ng-template ngbNavContent>
+            <app-protein-view-peptide-collection [data]="filterDFMap[filter.id]"></app-protein-view-peptide-collection>
+          </ng-template>
+        </ng-container>
+      </ng-container>
+    </div>
+    <div [ngbNavOutlet]="nav" class="mt-2"></div>
   </div>
   <app-floating-panels [filteredDF]="filteredData"></app-floating-panels>
 </ng-container>
