@@ -22,9 +22,8 @@ export class WebService {
   modelParameters: ModelParameters[] = []
   selectionSubject: Subject<boolean> = new Subject<boolean>()
   restoreSubject: Subject<boolean> = new Subject<boolean>()
-  filteredDF: IDataFrame<number, MSData> = new DataFrame()
   initializeModelParameters: Subject<boolean> = new Subject<boolean>()
-  histograms: {Tissue: string, Engine: string, value: number[], bins: number[]}[] = []
+  largestHistogramValue: number = 0
   constructor(private http: HttpClient, private toastService: ToastService) { }
 
   searchProtein(proteinGroup: string, distinct: boolean = true) {
@@ -177,7 +176,14 @@ export class WebService {
   }
 
   getCoverageData(proteinGroup: string, valid_tau: boolean = true) {
-    return this.http.get<SequenceCoverage>(`${this.baseUrl}/api/proteinsequence/get_coverage/`, {responseType: 'json', observe: 'body', params: {AccessionID: proteinGroup, valid_tau: valid_tau}}).pipe()
+    const params: any = {AccessionID: proteinGroup, valid_tau: valid_tau}
+    if (valid_tau) {
+      params["valid_tau"] = "True"
+    } else {
+      params["valid_tau"] = "False"
+    }
+
+    return this.http.get<SequenceCoverage>(`${this.baseUrl}/api/proteinsequence/get_coverage/`, {responseType: 'json', observe: 'body', params: params}).pipe()
   }
 
   getExactAccFromGene(gene: string) {
@@ -227,5 +233,13 @@ export class WebService {
 
   getHistogram() {
     return this.http.get<any>(`${this.baseUrl}/api/turnoverdata/get_histogram/`, {responseType: 'json', observe: 'body'})
+  }
+
+  getSummary(Protein_Group: string = "") {
+    return this.http.get<any>(`${this.baseUrl}/api/turnoverdata/get_summary/`, {responseType: 'json', observe: 'body', params: {Protein_Group: Protein_Group}})
+  }
+
+  getUniprot(Protein_Group: string = "") {
+    return this.http.get<any>(`https://rest.uniprot.org/uniprotkb/${Protein_Group}.json`, {responseType: 'json', observe: 'body', params: {Protein_Group: Protein_Group}})
   }
 }

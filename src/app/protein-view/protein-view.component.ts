@@ -61,7 +61,7 @@ export class ProteinViewComponent {
       })
       for (const i of value.split(",")) {
 
-        this.web.getCoverageData(i).subscribe((data) => {
+        this.web.getCoverageData(i, false).subscribe((data) => {
           this.coverageData = data
         })
       }

@@ -38,25 +38,33 @@ export class CoveragePlotComponent {
     title: "",
     autosize: true,
     width: 1200,
-    hovermode: false,
+    margin: {
+      l: 50,
+      r: 50,
+      b: 100,
+      t: 100,
+    },
+    hovermode: true,
     xaxis: {
       title: "Position",
       range: [0, 100],
-      showticklabels: false,
-      showgrid: false,
+      showticklabels: true,
+      showgrid: true,
       zeroline: false,
-      visible: false,
+      visible: true,
+      tickvals: [],
+      ticktext: [],
     },
     yaxis: {
-      showticklabels: false,
+      showticklabels: true,
       range: [0, 100],
-      type: "category",
       fixedrange: true,
       showgrid: false,
       zeroline: false,
       visible: false,
     },
     shapes: [],
+    annotations: [],
   }
   graphLayoutMap: any = {
 
@@ -93,6 +101,20 @@ export class CoveragePlotComponent {
       }).forEach((group) => {
         const graphData: any[] = []
         const graphLayout = JSON.parse(JSON.stringify(this.graphLayout))
+        const tempData: any = {
+          x: [],
+          y: [],
+          text: [],
+          mode: 'markers',
+          type: 'scatter',
+          marker: {
+            color: "rgba(31,119,180,0)",
+          },
+          hoverinfo: "text",
+        }
+
+        const rowidPrecursorMap: any = {}
+
 
         graphLayout.title = group.first().Engine
         const heightMap: any = {}
@@ -114,6 +136,7 @@ export class CoveragePlotComponent {
         }).bake()
 
         df.forEach((row) => {
+          rowidPrecursorMap[row.id] = row.Precursor_Id
           let previousHeight = 0
           for (const i in this.coverageData.coverage) {
             // @ts-ignore
@@ -167,12 +190,31 @@ export class CoveragePlotComponent {
           if (y1 > highest) {
             highest = y1
           }
+          tempData.x.push((x1+x0)/2)
+          tempData.y.push(y1)
+          tempData.text.push(rowidPrecursorMap[i])
 
+          // create annotation with id name
           graphLayout.shapes.push(lineShape)
         }
         graphLayout.yaxis.range = [0, highest]
         this.graphLayoutMap[group.first().Engine] = graphLayout
-        this.graphDataMap[group.first().Engine] = []
+        // create array of number from 1 to protein_sequence.length step by 50
+        const tickvals = []
+        const ticktext = []
+        for (let i=1; i<=this.coverageData.protein_sequence.length; i+=50) {
+          tickvals.push(i)
+          ticktext.push(i)
+        }
+
+        if (tickvals[tickvals.length-1] !== this.coverageData.protein_sequence.length) {
+          tickvals.push(this.coverageData.protein_sequence.length)
+          ticktext.push(this.coverageData.protein_sequence.length)
+        }
+
+        this.graphLayoutMap[group.first().Engine].xaxis.tickvals = tickvals
+        this.graphLayoutMap[group.first().Engine].xaxis.ticktext = ticktext
+        this.graphDataMap[group.first().Engine] = [tempData]
       })
       this.revision += 1
     }
@@ -184,8 +226,9 @@ export class CoveragePlotComponent {
     })
     if (this.form.controls['valid_tau'].value === true) {
       this.displayDF = this.displayDF.where((row) => {
-        return row.HalfLife_POI !== null
+        return row.tau_POI !== null
       })
+
     }
     if (this.form.controls['selected_only'].value === true) {
       this.displayDF = this.displayDF.where((row) => {
@@ -194,7 +237,40 @@ export class CoveragePlotComponent {
     }
     this.displayDF = this.displayDF.bake()
     this.engines = this.displayDF.getSeries("Engine").distinct().toArray()
-
+    console.log(this.displayDF.count())
     this.drawCoveragePlot()
+  }
+
+  clickHandler(event: any) {
+    if ("points" in event) {
+      const selectedData: string[] = []
+      for (const point of event.points) {
+        if (!("hoverOnBox" in point)) {
+          selectedData.push(point.data.text[point.pointNumber])
+
+          this.web.setOperationColor(point.data.text[point.pointNumber])
+          this.web.settings.searchOperations.push(point.data.text[point.pointNumber])
+        }
+
+      }
+      if (selectedData.length > 0) {
+        const data= this.df.where((row) => {
+          return selectedData.includes(row.Precursor_Id)
+        }).bake()
+        const ids: number[] = []
+        data.forEach((row) => {
+          ids.push(row.id)
+          if (!this.web.settings.searchMap[row.id]) {
+            this.web.settings.searchMap[row.id] = []
+          }
+          if (!this.web.settings.searchMap[row.id].includes(row.Precursor_Id)) {
+            this.web.settings.searchMap[row.id].push(row.Precursor_Id)
+          }
+        })
+        if (ids.length > 0) {
+          this.web.selectionHandler(ids)
+        }
+      }
+    }
   }
 }

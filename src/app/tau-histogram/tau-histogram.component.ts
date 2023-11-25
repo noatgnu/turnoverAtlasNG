@@ -1,4 +1,5 @@
 import {Component, Input} from '@angular/core';
+import {WebService} from "../web.service";
 
 @Component({
   selector: 'app-tau-histogram',
@@ -17,12 +18,27 @@ export class TauHistogramComponent {
     return this._data
   }
 
+  private _useOverallCount: boolean = true
+
+  @Input() set useOverallCount(value: boolean) {
+    this._useOverallCount = value
+    if (this.data.value.length > 0) {
+      this.drawGraph()
+    }
+
+
+  }
+
+  get useOverallCount(): boolean {
+    return this._useOverallCount
+  }
+
   graphData: any[] = []
   graphLayout: any = {
 
   }
   revision = 0
-  constructor() {
+  constructor(private web: WebService) {
   }
 
   drawGraph() {
@@ -37,7 +53,7 @@ export class TauHistogramComponent {
       }
     ]
     this.graphLayout = {
-      width: 800,
+      width: 600,
       xaxis: {
         title: "log2(Tau)",
       },
@@ -45,6 +61,11 @@ export class TauHistogramComponent {
         title: "Count",
       },
     }
+
+    if (this.useOverallCount) {
+      this.graphLayout.yaxis.range = [0, this.web.largestHistogramValue]
+    }
+
     if (this.data.Tissue !== "all") {
       this.graphLayout.title = this.data.Engine
     } else {

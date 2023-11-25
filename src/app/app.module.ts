@@ -41,6 +41,7 @@ import { ProteinViewPeptideContainerCompactComponent } from './protein-view-pept
 import { DatabaseStatsComponent } from './database-stats/database-stats.component';
 import { TauDatabaseDistributionComponent } from './tau-database-distribution/tau-database-distribution.component';
 import { TauHistogramComponent } from './tau-histogram/tau-histogram.component';
+import { ProteinSummaryComponent } from './protein-summary/protein-summary.component';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 @NgModule({
@@ -72,7 +73,8 @@ PlotlyModule.plotlyjs = PlotlyJS;
     ProteinViewPeptideContainerCompactComponent,
     DatabaseStatsComponent,
     TauDatabaseDistributionComponent,
-    TauHistogramComponent
+    TauHistogramComponent,
+    ProteinSummaryComponent
   ],
     imports: [
         BrowserModule,
