@@ -28,7 +28,9 @@
   <div class="card mt-2 border-danger">
     <div class="card-body">
       <div class="d-flex justify-content-end align-items-center gap-2">
-
+        <div>
+          <p class="text-muted">*AllPeptides is the peptide count that also include those without a calculated value</p>
+        </div>
         <div><button class="btn btn-sm btn-primary" (click)="exportHandler(fileType.value)"><span class="bi bi-file-spreadsheet"></span> Export</button></div>
         <div class="form-group">
           <select #fileType class="form-control">

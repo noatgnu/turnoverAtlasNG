@@ -43,7 +43,9 @@ export class Settings {
 
     }
     filters: any[] = []
+    barChartColorMap: any = {
 
+    }
     export() {
         return {
             currentProteinGroup: this.currentProteinGroup,
@@ -66,6 +68,7 @@ export class Settings {
             markerColor: this.markerColor,
             dataDistributionForm: this.dataDistributionForm,
           filters: this.filters,
+          barChartColorMap: this.barChartColorMap,
 
         }
     }

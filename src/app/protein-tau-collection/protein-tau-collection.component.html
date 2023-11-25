@@ -7,11 +7,55 @@
     </h2>
     <div #collapse="ngbCollapse" [(ngbCollapse)]="iscollapse">
       <div class="accordion-body">
-        <div *ngIf="!combinedPlot; else combined">
-          <div *ngFor="let g of tissueGroupData">
-            <app-protein-tau-distribution [data]="g"></app-protein-tau-distribution>
-          </div>
+        <div ngbNav class="nav-tabs" [(activeId)]="activeId" #nav="ngbNav">
+          <ng-container ngbNavItem [ngbNavItem]="1">
+            <button ngbNavLink>Halflife distribution</button>
+            <ng-template ngbNavContent>
+              <div *ngIf="!combinedPlot; else combined">
+                <div *ngFor="let g of tissueGroupData">
+                  <app-protein-tau-distribution [data]="g"></app-protein-tau-distribution>
+                </div>
+              </div>
+            </ng-template>
+          </ng-container>
+          <ng-container ngbNavItem [ngbNavItem]="2">
+            <button ngbNavLink>Median halflife count</button>
+            <ng-template ngbNavContent>
+
+              <div class="d-flex justify-content-start gap-5">
+                <div style="width: 200px">
+                  <div *ngFor="let e of web.engines" class="d-flex align-items-center gap-1">
+                    <ngx-colors ngx-colors-trigger [(ngModel)]="web.settings.barChartColorMap[e]"></ngx-colors> <div>{{e}}</div>
+                  </div>
+                  <button class="btn btn-primary mt-2" (click)="updatePlot()">Redraw</button>
+                </div>
+                <app-average-halflife-barchart></app-average-halflife-barchart>
+              </div>
+            </ng-template>
+          </ng-container>
+          <ng-container ngbNavItem [ngbNavItem]="3">
+            <button ngbNavLink>Peptide count</button>
+            <ng-template ngbNavContent>
+
+              <div class="d-flex justify-content-start gap-5">
+                <div style="width: 200px">
+                  <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="includeInvalid" [(ngModel)]="includeInvalid">
+                    <label for="includeInvalid">Include peptides without valid halflife</label>
+                  </div>
+                  <div *ngFor="let e of web.engines" class="d-flex align-items-center gap-1">
+                    <ngx-colors ngx-colors-trigger [(ngModel)]="web.settings.barChartColorMap[e]"></ngx-colors> <div>{{e}}</div>
+                  </div>
+                  <button class="btn btn-primary mt-2" (click)="updatePlot()">Redraw</button>
+                </div>
+
+                <app-peptide-count-barchart [includeInvalid]="includeInvalid"></app-peptide-count-barchart>
+              </div>
+            </ng-template>
+          </ng-container>
+
         </div>
+        <div [ngbNavOutlet]="nav" class="mt-2"></div>
 
         <ng-template #combined>
           <app-protein-tau-distribution [data]="data" *ngIf="!iscollapse"></app-protein-tau-distribution>

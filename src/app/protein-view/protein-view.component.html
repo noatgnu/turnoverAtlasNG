@@ -1,5 +1,5 @@
-<div class="d-flex justify-content-center">
-  <div><h1><b>{{protein}}</b></h1></div>
+<div class="d-flex justify-content-center align-items-center gap-2">
+  <div><h1><b>{{protein}}</b></h1></div><div><a href="#/protein-summary/{{protein}}" target="_blank"><span class="badge bg-warning">Protein card</span></a></div>
 </div>
 <div class="container">
   <app-protein-search [data]="df" (filteredData)="handlerFilterDFUpdate($event)"></app-protein-search>
@@ -26,7 +26,7 @@
     <app-filter-preset [engines]="web.engines" [tissues]="web.tissues" [sequences]="web.strippedSequences" (filterOutput)="handleSubFilter($event)"></app-filter-preset>
   </div>
 
-  <div class="fluid-container mt-5" *ngIf="filteredData.count() > 0 && ready; else empty">
+  <div class="fluid-container mt-5" style="padding: 20px" *ngIf="filteredData.count() > 0 && ready; else empty">
     <div ngbNav class="nav-tabs" [(activeId)]="activeId" #nav="ngbNav">
       <ng-container ngbNavItem [ngbNavItem]="1">
         <button ngbNavLink>Without sub-filter ({{filteredData.count()}})</button>

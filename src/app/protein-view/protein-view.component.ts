@@ -9,6 +9,7 @@ import {SequenceCoverage} from "../sequence-coverage";
 import {AccountsService} from "../accounts.service";
 import {HttpEventType} from "@angular/common/http";
 import {Settings} from "../settings";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-protein-view',
@@ -77,7 +78,7 @@ export class ProteinViewComponent {
 
   page: number = 1
 
-  constructor(public web: WebService, private fb: FormBuilder, private toastService: ToastService, private accounts: AccountsService) {
+  constructor(public web: WebService, private fb: FormBuilder, private toastService: ToastService, private accounts: AccountsService, private route: Router) {
 
   }
 
@@ -165,4 +166,5 @@ export class ProteinViewComponent {
     console.log(this.web.settings.filters)
     console.log(this.filterDFMap)
   }
+
 }

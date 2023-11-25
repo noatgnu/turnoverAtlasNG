@@ -43,6 +43,8 @@ import { TauDatabaseDistributionComponent } from './tau-database-distribution/ta
 import { TauHistogramComponent } from './tau-histogram/tau-histogram.component';
 import { ProteinSummaryComponent } from './protein-summary/protein-summary.component';
 import { FilterPresetComponent } from './filter-preset/filter-preset.component';
+import { PeptideCountBarchartComponent } from './peptide-count-barchart/peptide-count-barchart.component';
+import { AverageHalflifeBarchartComponent } from './average-halflife-barchart/average-halflife-barchart.component';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 @NgModule({
@@ -76,7 +78,9 @@ PlotlyModule.plotlyjs = PlotlyJS;
     TauDatabaseDistributionComponent,
     TauHistogramComponent,
     ProteinSummaryComponent,
-    FilterPresetComponent
+    FilterPresetComponent,
+    PeptideCountBarchartComponent,
+    AverageHalflifeBarchartComponent
   ],
     imports: [
         BrowserModule,
