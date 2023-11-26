@@ -44,9 +44,5 @@
 
 
 <ng-template #loading>
-  <div class="d-flex justify-content-center">
-    <div class="spinner-border" role="status">
-      <span class="sr-only">Loading...</span>
-    </div>
-  </div>
+  <ngb-progressbar type="info" [value]="100" [striped]="true" [animated]="true">Loading...</ngb-progressbar>
 </ng-template>
