@@ -46,6 +46,8 @@ export class Settings {
     barChartColorMap: any = {
 
     }
+    modellingKPool: boolean = true
+    modellingKPoolColor: string = "rgb(191,55,55)"
     export() {
         return {
             currentProteinGroup: this.currentProteinGroup,
@@ -69,6 +71,8 @@ export class Settings {
             dataDistributionForm: this.dataDistributionForm,
           filters: this.filters,
           barChartColorMap: this.barChartColorMap,
+          modellingKPool: this.modellingKPool,
+          modellingKPoolColor: this.modellingKPoolColor,
 
         }
     }

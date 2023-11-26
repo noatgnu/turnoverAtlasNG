@@ -127,12 +127,16 @@ export class ProteinTauDistributionComponent {
           if (this.form.controls['log2'].value === true) {
             this.graphLayoutMap[engine].yaxis.title = "log2("+this.form.controls['category'].value+")"
           }
+
           this.graphLayoutMap[engine].title = engine
           this.graphDataMap[engine] = []
         }
         for (const tissue in temp[engine]) {
           this.graphDataMap[engine].push(temp[engine][tissue])
         }
+        this.graphDataMap[engine].sort((a: any, b: any) => {
+          return a.name.localeCompare(b.name)
+        })
       }
     }
 

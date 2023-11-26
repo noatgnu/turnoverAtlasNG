@@ -3,6 +3,7 @@ import {IDataFrame, ISeries, Series} from "data-forge";
 import {Modelling} from "../modelling-data";
 import {MSData} from "../msdata";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {WebService} from "../web.service";
 
 @Component({
   selector: 'app-protein-modelling-collection',
@@ -34,17 +35,31 @@ export class ProteinModellingCollectionComponent {
   groupData: ISeries<number, IDataFrame<number, MSData>> = new Series()
   form = this.fb.group({
     selectedTissues: new FormControl<string[]>([], Validators.required),
-    hideNotSelected: new FormControl<boolean>(false)
+    hideNotSelected: new FormControl<boolean>(false),
+    kpool: new FormControl<boolean>(true),
+    kpoolColor: new FormControl<string>(this.web.settings.modellingKPoolColor),
   })
 
   hideNotSelected: boolean = false
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private web: WebService) {
     this.form.controls.selectedTissues.valueChanges.subscribe((data) => {
         this.updateGroupData()
     })
     this.form.controls.hideNotSelected.valueChanges.subscribe((data) => {
       if (data !== null) {
         this.hideNotSelected = data
+      }
+    })
+    this.form.controls.kpool.valueChanges.subscribe((data) => {
+      if (data !== null) {
+        this.web.settings.modellingKPool = data
+        this.updateGroupData()
+      }
+    })
+    this.form.controls.kpoolColor.valueChanges.subscribe((data) => {
+      if (data !== null) {
+        this.web.settings.modellingKPoolColor = data
+        this.updateGroupData()
       }
     })
   }

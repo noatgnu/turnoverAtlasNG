@@ -21,6 +21,13 @@
               <input class="form-check-input" formControlName="hideNotSelected" type="checkbox" id="hideNotSelected">
               <label class="form-check-label" for="hideNotSelected">Make not selected model transparent</label>
             </div>
+            <div class="form-check">
+              <input class="form-check-input" formControlName="kpool" type="checkbox" id="kpool">
+              <label class="form-check-label" for="kpool">Show free Lys pool model</label>
+            </div>
+            <div class="d-flex align-items-center gap-1">
+              <div><ngx-colors ngx-colors-trigger formControlName="kpoolColor"></ngx-colors></div><div>Free Lys pool</div>
+            </div>
           </div>
 
         </form>

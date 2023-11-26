@@ -33,9 +33,6 @@ export class KpoolOnlyPlotComponent {
     //modeBarButtonsToRemove: ["toImage"]
     toImageButtonOptions: {
       format: 'svg',
-      filename: this.graphLayout.title.text,
-      height: this.graphLayout.height,
-      width: this.graphLayout.width,
       scale: 1
     }
   }

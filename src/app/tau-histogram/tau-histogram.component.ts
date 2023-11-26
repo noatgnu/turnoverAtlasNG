@@ -28,7 +28,13 @@ export class TauHistogramComponent {
 
 
   }
-
+  config: any = {
+    //modeBarButtonsToRemove: ["toImage"]
+    toImageButtonOptions: {
+      format: 'svg',
+      scale: 1
+    }
+  }
   get useOverallCount(): boolean {
     return this._useOverallCount
   }

@@ -54,6 +54,14 @@ export class PeptideCountBarchartComponent {
     }
   }
   revision = 0
+
+  config: any = {
+    toImageButtonOptions: {
+      format: 'svg',
+      scale: 1
+    }
+  }
+
   constructor(private web: WebService) {
     this.web.getSummary(this.web.settings.currentProteinGroup).subscribe((data) => {
       this.data = new DataFrame(data)

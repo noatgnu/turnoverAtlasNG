@@ -77,18 +77,18 @@ export class ProteinModellingComponent {
         return row.Engine === group.first().Engine && row.Tissue === group.first().Tissue
       })
 
-      if (model.length > 0) {
+      if (model.length > 0 && this.web.settings.modellingKPool) {
         const temp: any = {
           x: model[0].k_pool.map((x) => {return x.day}),
           y: model[0].k_pool.map((x) => {return x.value}),
           mode: 'lines',
-          name: 'K optimized',
+          name: 'Free Lys pool',
           line: {
-            color: 'rgba(191,55,55,0.5)',
+            color: this.web.settings.modellingKPoolColor,
             shape: 'spline',
           },
           showlegend: false,
-          hovertemplate: `Day: %{x}<br>Value: %{y}<br>K optimized`
+          hovertemplate: `Day: %{x}<br>Value: %{y}<br>Free Lys pool`
         }
         graphDataMap[group.first().Engine].push(temp)
       }
