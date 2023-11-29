@@ -12,9 +12,9 @@ import * as chroma from "chroma-js";
 })
 export class CoveragePlotComponent {
   private _coverageData: SequenceCoverage|undefined = undefined
-  df: IDataFrame<{id: string, Precursor_Id: string, Tissue: string, Engine: string, tau_POI: number, HalfLife_POI: number, Stripped_Sequence: string}> = new DataFrame()
+  df: IDataFrame<{id: string, Start_Pos: number, End_Pos: number, Precursor_Id: string, Tissue: string, Engine: string, tau_POI: number, HalfLife_POI: number, Stripped_Sequence: string}> = new DataFrame()
   tissues: string[] = []
-  displayDF: IDataFrame<{id: string, Precursor_Id: string, Tissue: string, Engine: string, tau_POI: number, HalfLife_POI: number, Stripped_Sequence: string}> = new DataFrame()
+  displayDF: IDataFrame<{id: string, Start_Pos: number, End_Pos: number, Precursor_Id: string, Tissue: string, Engine: string, tau_POI: number, HalfLife_POI: number, Stripped_Sequence: string}> = new DataFrame()
   engines: string[] = []
   iscollapse: boolean = true
   revision: number = 0
@@ -161,42 +161,48 @@ export class CoveragePlotComponent {
           },
         }
         graphLayout.shapes.push(lineShapeFromData)
-        const df = group.orderByDescending((row) => {
-          return row.Stripped_Sequence.length
-        }).bake()
-
-        df.forEach((row) => {
-          rowidPrecursorMap[row.id] = row
-          let previousHeight = 0
-          for (const i in this.coverageData.coverage) {
-            // @ts-ignore
-            if (this.coverageData.coverage[i].includes(row.id)) {
-              if (!(i in heightMap)) {
-                heightMap[i] = {highest: 0}
-              }
-              if (!(row.id in heightMap[i])) {
-                heightMap[i].highest += 1
-                if (previousHeight ==0) {
-                  previousHeight = heightMap[i].highest
-                } else {
-                  heightMap[i].highest = previousHeight
+        group.groupBy((row) => {
+          return row.Start_Pos
+        }).forEach((moreGroup) => {
+          const df = moreGroup.orderByDescending((row) => {
+            return row.Stripped_Sequence.length
+          }).bake()
+          df.forEach((row) => {
+            rowidPrecursorMap[row.id] = row
+            let previousHeight = 0
+            for (const i in this.coverageData.coverage) {
+              // @ts-ignore
+              if (this.coverageData.coverage[i].includes(row.id)) {
+                if (!(i in heightMap)) {
+                  heightMap[i] = {highest: 0}
                 }
-              }
-
-              heightMap[i][row.id] = heightMap[i].highest
-              if (!dataMap[row.id]) {
-                dataMap[row.id] = {
-                  x: [],
-                  y: [],
+                if (!(row.id in heightMap[i])) {
+                  heightMap[i].highest += 1
+                  if (previousHeight ==0) {
+                    previousHeight = heightMap[i].highest
+                  } else {
+                    heightMap[i].highest = previousHeight
+                  }
                 }
+
+                heightMap[i][row.id] = heightMap[i].highest
+                if (!dataMap[row.id]) {
+                  dataMap[row.id] = {
+                    x: [],
+                    y: [],
+                  }
+                }
+                dataMap[row.id].x.push(parseInt(i)+1)
+                dataMap[row.id].y.push(heightMap[i][row.id])
               }
-              dataMap[row.id].x.push(parseInt(i)+1)
-              dataMap[row.id].y.push(heightMap[i][row.id])
             }
-          }
+          })
         })
-        graphLayout.xaxis.range = [1, this.coverageData.protein_sequence.length]
 
+
+
+        graphLayout.xaxis.range = [1, this.coverageData.protein_sequence.length]
+        console.log(dataMap)
         if (this.web.settings.minimumHalfLife && this.web.settings.maximumHalfLife && this.form.value.gradient_color) {
           if (this.form.value.gradient_color === true) {
             this.gradient = chroma.scale(['#fdd46d', '#d90404']).domain([this.web.settings.minimumHalfLife, this.web.settings.maximumHalfLife]).mode('lch')
@@ -268,9 +274,9 @@ export class CoveragePlotComponent {
           tempData.x.push((x1+x0)/2)
           tempData.y.push(y1)
           if (rowidPrecursorMap[i].HalfLife_POI !== null) {
-            tempData.text.push(`${rowidPrecursorMap[i].Precursor_Id}<br>Halflife: ${Math.round( rowidPrecursorMap[i].HalfLife_POI*10)/10}`)
+            tempData.text.push(`${rowidPrecursorMap[i].Precursor_Id}<br>Halflife: ${Math.round( rowidPrecursorMap[i].HalfLife_POI*10)/10}<br>Start Position: ${rowidPrecursorMap[i].Start_Pos+1}<br>End Position: ${rowidPrecursorMap[i].End_Pos}`)
           } else {
-            tempData.text.push(`${rowidPrecursorMap[i].Precursor_Id}<br>Halflife: NA`)
+            tempData.text.push(`${rowidPrecursorMap[i].Precursor_Id}<br>Halflife: NA<br>Start Position: ${rowidPrecursorMap[i].Start_Pos+1}<br>End Position: ${rowidPrecursorMap[i].End_Pos}`)
           }
 
 
@@ -291,7 +297,7 @@ export class CoveragePlotComponent {
           tickvals.push(this.coverageData.protein_sequence.length)
           ticktext.push(this.coverageData.protein_sequence.length)
         }
-
+        console.log(this.graphLayoutMap[group.first().Engine])
         this.graphLayoutMap[group.first().Engine].xaxis.tickvals = tickvals
         this.graphLayoutMap[group.first().Engine].xaxis.ticktext = ticktext
         this.graphDataMap[group.first().Engine] = [tempData]
