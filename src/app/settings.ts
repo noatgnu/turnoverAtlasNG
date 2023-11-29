@@ -13,7 +13,8 @@ export class Settings {
     kpoolOnlyColorMap: any = {}
     searchOperations: string[] = []
     searchMap: any = {}
-
+    minimumHalfLife: number = 0
+    maximumHalfLife: number = 0
     colorMap: any = {}
 
     defaultColorList: string[] = [
@@ -48,6 +49,7 @@ export class Settings {
     }
     modellingKPool: boolean = true
     modellingKPoolColor: string = "rgb(191,55,55)"
+    coveragePlotColorGradient: string[] = ['#fdd46d', '#d90404', '#000000']
     export() {
         return {
             currentProteinGroup: this.currentProteinGroup,

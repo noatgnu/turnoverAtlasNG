@@ -3,6 +3,7 @@ import {SequenceCoverage} from "../sequence-coverage";
 import {WebService} from "../web.service";
 import {DataFrame, IDataFrame} from "data-forge";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import * as chroma from "chroma-js";
 
 @Component({
   selector: 'app-coverage-plot',
@@ -11,12 +12,40 @@ import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 })
 export class CoveragePlotComponent {
   private _coverageData: SequenceCoverage|undefined = undefined
-  df: IDataFrame<{id: string, Precursor_Id: string, Tissue: string, Engine: string, tau_POI: number, Stripped_Sequence: string}> = new DataFrame()
+  df: IDataFrame<{id: string, Precursor_Id: string, Tissue: string, Engine: string, tau_POI: number, HalfLife_POI: number, Stripped_Sequence: string}> = new DataFrame()
   tissues: string[] = []
-  displayDF: IDataFrame<{id: string, Precursor_Id: string, Tissue: string, Engine: string, tau_POI: number, Stripped_Sequence: string}> = new DataFrame()
+  displayDF: IDataFrame<{id: string, Precursor_Id: string, Tissue: string, Engine: string, tau_POI: number, HalfLife_POI: number, Stripped_Sequence: string}> = new DataFrame()
   engines: string[] = []
   iscollapse: boolean = true
   revision: number = 0
+  gradient: chroma.Scale<chroma.Color>|undefined = undefined
+
+  gradientData: any[] = []
+  gradientLayout: any = {
+    margin: {
+      l: 0,
+      r: 0,
+      b: 50,
+      t: 0,
+    },
+    height: 50,
+    width: 50,
+    xaxis: {
+      title: '',
+      type: 'category',
+      tickmode: 'array',
+      showticklabels: true,
+      tickvals: [],
+      ticktext: [],
+      fixedrange: true,
+    },
+    yaxis: {
+      title: '',
+      type: 'category',
+      tickmode: 'array',
+      fixedrange: true,
+    }
+  }
   @Input() set coverageData(value: SequenceCoverage) {
 
     this._coverageData = value
@@ -77,6 +106,7 @@ export class CoveragePlotComponent {
     tissues: new FormControl<string>("", Validators.required),
     valid_tau: new FormControl<boolean>(true),
     selected_only: new FormControl<boolean>(false),
+    gradient_color: new FormControl<boolean>(false),
   })
 
   get coverageData(): SequenceCoverage {
@@ -136,7 +166,7 @@ export class CoveragePlotComponent {
         }).bake()
 
         df.forEach((row) => {
-          rowidPrecursorMap[row.id] = row.Precursor_Id
+          rowidPrecursorMap[row.id] = row
           let previousHeight = 0
           for (const i in this.coverageData.coverage) {
             // @ts-ignore
@@ -167,6 +197,40 @@ export class CoveragePlotComponent {
         })
         graphLayout.xaxis.range = [1, this.coverageData.protein_sequence.length]
 
+        if (this.web.settings.minimumHalfLife && this.web.settings.maximumHalfLife && this.form.value.gradient_color) {
+          if (this.form.value.gradient_color === true) {
+            this.gradient = chroma.scale(['#fdd46d', '#d90404']).domain([this.web.settings.minimumHalfLife, this.web.settings.maximumHalfLife]).mode('lch')
+            // draw a plotly js heatmap with 1 single row and 10 columns to display the gradient
+            const temp: any = {
+              x: [],
+              y: [1],
+              z: [[]],
+              xgap: 1,
+              ygap: 1,
+              showscale: false,
+              type: 'heatmap',
+              colorscale: [],
+              zmin: this.web.settings.minimumHalfLife,
+              zmax: this.web.settings.maximumHalfLife,
+            }
+            const tickvals: number[] = []
+            const ticktext: string[] = []
+            for (let i=0; i<=1; i = i + 0.1) {
+              const value= i*(this.web.settings.maximumHalfLife - this.web.settings.minimumHalfLife) + this.web.settings.minimumHalfLife
+              const color = this.gradient(value).toString()
+              temp.x.push(i)
+              temp.z[0].push(value)
+              temp.colorscale.push([i, color])
+              tickvals.push(i)
+              ticktext.push(value.toFixed(1))
+            }
+            this.gradientData = [temp]
+            this.gradientLayout.width = 20*temp.x.length + this.gradientLayout.margin.l + this.gradientLayout.margin.r
+            this.gradientLayout.height = 20 + this.gradientLayout.margin.b + this.gradientLayout.margin.t
+            this.gradientLayout.xaxis.tickvals = tickvals
+            this.gradientLayout.xaxis.ticktext = ticktext
+          }
+        }
         let highest = 0
         for (const i in dataMap) {
           const x0 = dataMap[i].x[0]
@@ -184,15 +248,31 @@ export class CoveragePlotComponent {
               width: 4,
             },
           }
-          if (this.web.settings.searchMap[i]) {
-            lineShape.line.color = this.web.settings.colorMap[this.web.settings.searchMap[i][this.web.settings.searchMap[i].length -1]].slice()
+          if (this.form.value.gradient_color) {
+            if (this.form.value.gradient_color === true && this.gradient) {
+              lineShape.line.color = this.gradient(rowidPrecursorMap[i].HalfLife_POI).toString()
+            } else {
+              if (this.web.settings.searchMap[i]) {
+                lineShape.line.color = this.web.settings.colorMap[this.web.settings.searchMap[i][this.web.settings.searchMap[i].length -1]].slice()
+              }
+            }
+          } else {
+            if (this.web.settings.searchMap[i]) {
+              lineShape.line.color = this.web.settings.colorMap[this.web.settings.searchMap[i][this.web.settings.searchMap[i].length -1]].slice()
+            }
           }
+
           if (y1 > highest) {
             highest = y1
           }
           tempData.x.push((x1+x0)/2)
           tempData.y.push(y1)
-          tempData.text.push(rowidPrecursorMap[i])
+          if (rowidPrecursorMap[i].HalfLife_POI !== null) {
+            tempData.text.push(`${rowidPrecursorMap[i].Precursor_Id}<br>Halflife: ${Math.round( rowidPrecursorMap[i].HalfLife_POI*10)/10}`)
+          } else {
+            tempData.text.push(`${rowidPrecursorMap[i].Precursor_Id}<br>Halflife: NA`)
+          }
+
 
           // create annotation with id name
           graphLayout.shapes.push(lineShape)
@@ -237,7 +317,6 @@ export class CoveragePlotComponent {
     }
     this.displayDF = this.displayDF.bake()
     this.engines = this.displayDF.getSeries("Engine").distinct().toArray()
-    console.log(this.displayDF.count())
     this.drawCoveragePlot()
   }
 

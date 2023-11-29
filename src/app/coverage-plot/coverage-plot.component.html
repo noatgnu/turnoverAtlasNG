@@ -28,9 +28,17 @@
                             Selected peptide only
                         </label>
                     </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="gradient" formControlName="gradient_color">
+                    <label class="form-check-label" for="gradient">
+                      Gradient color for HalfLife value
+                    </label>
+                  </div>
                 </form>
-                <plotly-plot (plotlyClick)="clickHandler($event)" (clickAnnotation)="clickHandler($event)" [config]="config" [revision]="revision" *ngFor="let e of engines" [data]="graphDataMap[e]" [layout]="graphLayoutMap[e]"></plotly-plot>
-
+                <plotly-plot (plotlyClick)="clickHandler($event)" (clickAnnotation)="clickHandler($event)" [config]="config" [updateOnlyWithRevision]="true" [revision]="revision" *ngFor="let e of engines" [data]="graphDataMap[e]" [layout]="graphLayoutMap[e]"></plotly-plot>
+              <div class="d-flex justify-content-center">
+                <plotly-plot [data]="gradientData" [layout]="gradientLayout" *ngIf="form.value['gradient_color']===true" [revision]="revision" [updateOnlyWithRevision]="true"></plotly-plot>
+              </div>
             </div>
         </div>
     </div>

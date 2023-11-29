@@ -18,13 +18,13 @@
           Full Name: <span class="text-primary">{{fullProteinName}}</span>
         </p>
         <p *ngIf="proteomicsDBID !== ''">
-          ProteomicsDB: <a href="https://www.proteomicsdb.org/proteomicsdb/#protein/proteinDetails/{{proteomicsDBID}}" target="_blank">{{proteinGroup}}</a>
+          ProteomicsDB: <a href="https://www.proteomicsdb.org/protein/{{proteomicsDBID}}/summary" target="_blank">{{proteinGroup}}</a>
         </p>
       </div>
     </div>
   </div>
 </div>
-<div class="d-flex justify-content-center">
+<div class="d-flex justify-content-center p-2">
   <div class="card mt-2 border-danger">
     <div class="card-body">
       <div class="d-flex justify-content-end align-items-center gap-2">
@@ -40,18 +40,21 @@
           </select>
         </div>
       </div>
-      <table class="table table-striped">
-        <thead>
-        <tr>
-          <th scope="col" *ngFor="let c of columns">{{c}}</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let row of summary">
-          <td *ngFor="let c of columns">{{row[c]}}</td>
-        </tr>
-        </tbody>
-      </table>
+      <div class="p-2 overflow-auto">
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th scope="col" *ngFor="let c of columns">{{c}}</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let row of summary">
+            <td *ngFor="let c of columns">{{row[c]}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
     </div>
   </div>
 

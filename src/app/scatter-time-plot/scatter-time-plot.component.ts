@@ -87,6 +87,7 @@ export class ScatterTimePlotComponent {
 
   async drawGraph() {
     if (this._data) {
+      this.graphLayout.title = `Halflife POI: ${Math.round(this._data.HalfLife_POI * 10) / 10}`
       let days: number[] = []
       const daysMap: any = {}
 

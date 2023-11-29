@@ -69,6 +69,7 @@ export class ProteinViewComponent {
 
         this.web.getCoverageData(i, false).subscribe((data) => {
           this.coverageData = data
+          console.log(data)
         })
       }
     })
@@ -95,13 +96,16 @@ export class ProteinViewComponent {
     }
 
     if (days.length > 0 && ids.length > 0) {
+
       this.toastService.show("Data formating", "Grouping data by tissue")
-      this.modellingDataGroup = this.filteredData.where((row) => {
+      const nonNull = this.filteredData.where((row) => {
         return row.tau_model !== null
-      }).groupBy((row) => {
+      }).bake()
+      this.modellingDataGroup = nonNull.groupBy((row) => {
         return row.Tissue
       }).bake()
-
+      this.web.settings.minimumHalfLife = nonNull.getSeries("HalfLife_POI").min()
+      this.web.settings.maximumHalfLife = nonNull.getSeries("HalfLife_POI").max()
       // this.web.postModellingDataMass(ids, days).subscribe((data) => {
       //   this.modellingData = new DataFrame(data)
       //   this.modellingDataGroup = this.modellingData.groupBy((row) => {
@@ -115,6 +119,7 @@ export class ProteinViewComponent {
         this.filterDFMap[filter.id] = this.updateFilterDFMap(filter)
       }
     }
+
     this.ready = true
   }
 
