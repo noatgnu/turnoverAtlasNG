@@ -17,11 +17,11 @@ export class TauDatabaseDistributionComponent {
   tissueList: string[] = []
 
   useHighesttoggleMap: {[key: string]: boolean} = {}
-
+  useHigestToggle: boolean = true
   form = this.fb.group({
     Tissue: new FormControl<string[]>([])
   })
-
+  highlight: {from: string, index: number} = {from: '', index: -1}
   constructor(public web: WebService, private fb: FormBuilder) {
     this.web.getHistogram().subscribe((data: any) => {
       this.overallHistogram = data[0]
@@ -36,4 +36,7 @@ export class TauDatabaseDistributionComponent {
     })
   }
 
+  updateHightlight(data: {from: string, index: number}) {
+    this.highlight = data
+  }
 }

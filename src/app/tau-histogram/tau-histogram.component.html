@@ -1,1 +1,1 @@
-<plotly-plot [config]="config" [data]="graphData" [layout]="graphLayout" [updateOnlyWithRevision]="true" [revision]="revision"></plotly-plot>
+<plotly-plot (plotlyClick)="clickHandler($event)" [config]="config" [data]="graphData" [layout]="graphLayout" [updateOnlyWithRevision]="true" [revision]="revision"></plotly-plot>
