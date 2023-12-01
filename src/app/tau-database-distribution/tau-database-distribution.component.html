@@ -19,9 +19,12 @@
     <label class="form-check-label">Set max yaxis as highest count value from overall distribution histogram</label>
   </div>
   <div class="d-flex justify-content-center flex-wrap overflow-auto">
-    <div *ngFor="let h of histograms">
-      <app-tau-histogram [data]="h" [useOverallCount]="useHigestToggle" (selectionEvent)="updateHightlight($event)" [highlightColumn]="highlight"></app-tau-histogram>
-    </div>
+    <ng-container *ngFor="let h of histograms">
+      <div *ngIf="form.value.Tissue?.includes(h.Tissue)">
+        <app-tau-histogram [data]="h" [useOverallCount]="useHigestToggle" (selectionEvent)="updateHightlight($event)" [highlightColumn]="highlight"></app-tau-histogram>
+      </div>
+    </ng-container>
+
   </div>
 </div>
 
