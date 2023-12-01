@@ -135,6 +135,7 @@ export class CoveragePlotComponent {
           x: [],
           y: [],
           text: [],
+          data: [],
           mode: 'markers',
           type: 'scatter',
           marker: {
@@ -274,8 +275,10 @@ export class CoveragePlotComponent {
           tempData.x.push((x1+x0)/2)
           tempData.y.push(y1)
           if (rowidPrecursorMap[i].HalfLife_POI !== null) {
+            tempData.data.push(rowidPrecursorMap[i])
             tempData.text.push(`${rowidPrecursorMap[i].Precursor_Id}<br>Halflife: ${Math.round( rowidPrecursorMap[i].HalfLife_POI*10)/10}<br>Start Position: ${rowidPrecursorMap[i].Start_Pos+1}<br>End Position: ${rowidPrecursorMap[i].End_Pos}`)
           } else {
+            tempData.data.push(rowidPrecursorMap[i])
             tempData.text.push(`${rowidPrecursorMap[i].Precursor_Id}<br>Halflife: NA<br>Start Position: ${rowidPrecursorMap[i].Start_Pos+1}<br>End Position: ${rowidPrecursorMap[i].End_Pos}`)
           }
 
@@ -331,10 +334,10 @@ export class CoveragePlotComponent {
       const selectedData: string[] = []
       for (const point of event.points) {
         if (!("hoverOnBox" in point)) {
-          selectedData.push(point.data.text[point.pointNumber])
+          selectedData.push(point.data.data[point.pointNumber].Precursor_Id)
 
-          this.web.setOperationColor(point.data.text[point.pointNumber])
-          this.web.settings.searchOperations.push(point.data.text[point.pointNumber])
+          this.web.setOperationColor(point.data.data[point.pointNumber].Precursor_Id)
+          this.web.settings.searchOperations.push(point.data.data[point.pointNumber].Precursor_Id)
         }
 
       }

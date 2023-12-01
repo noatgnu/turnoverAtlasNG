@@ -18,4 +18,17 @@ export class ProteinViewPeptideContainerCompactComponent {
   }
 
   constructor(public web: WebService) { }
+
+  addToSelection() {
+    if (this.data) {
+      this.web.setOperationColor(this.data.Precursor_Id)
+      if (!this.web.settings.searchMap[this.data.id]) {
+        this.web.settings.searchMap[this.data.id] = []
+      }
+      if (!this.web.settings.searchMap[this.data.id].includes(this.data.Precursor_Id)) {
+        this.web.settings.searchMap[this.data.id].push(this.data.Precursor_Id)
+      }
+      this.web.selectionHandler([this.data.id])
+    }
+  }
 }

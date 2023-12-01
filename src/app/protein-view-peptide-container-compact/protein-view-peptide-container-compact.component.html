@@ -18,4 +18,7 @@
       Tissue: {{data.Tissue}}</p>
     </div>
   </div>
+  <div class="card-footer"  *ngIf="!web.settings.searchMap[data.id]">
+    <button class="btn btn-primary" (click)="addToSelection()">Add to selection</button>
+  </div>
 </div>
