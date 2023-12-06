@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import {FormBuilder} from "@angular/forms";
 import {WebService} from "../web.service";
 import {NgbActiveModal, NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {ToastService} from "../toast.service";
 
 @Component({
   selector: 'app-plot-settings',
@@ -28,7 +29,7 @@ export class PlotSettingsComponent {
 
   kPoolOnlyList: string[] = Object.keys(this.web.settings.kpoolOnlyColorMap)
 
-  constructor(private fb: FormBuilder, private web: WebService, private modal: NgbActiveModal) {
+  constructor(private fb: FormBuilder, private web: WebService, private modal: NgbActiveModal, private toast: ToastService) {
     const temp: any = {}
     const kPoolOnlyList: string[] = []
     for (const i in this.web.settings.kpoolOnlyColorMap) {
@@ -83,4 +84,8 @@ export class PlotSettingsComponent {
     this.modal.close()
   }
 
+  saveDefault() {
+    this.web.settings.saveColorSettingsToBrowser()
+    this.toast.show("Saved", "Saved basic color settings to browser", 2000)
+  }
 }

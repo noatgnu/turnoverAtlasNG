@@ -75,6 +75,8 @@ export class Settings {
           barChartColorMap: this.barChartColorMap,
           modellingKPool: this.modellingKPool,
           modellingKPoolColor: this.modellingKPoolColor,
+          mininumHalfLife: this.minimumHalfLife,
+          maximumHalfLife: this.maximumHalfLife,
 
         }
     }
@@ -123,5 +125,41 @@ export class Settings {
     this.filters = this.filters.filter((f) => {
       return f.id !== id
     })
+  }
+
+  exportBrowserSettings() {
+      return {
+        modellingKPool: this.modellingKPool,
+        modellingKPoolColor: this.modellingKPoolColor,
+        scatterPlotXAxisRange: this.scatterPlotXAxisRange,
+        scatterPlotYAxisRange: this.scatterPlotYAxisRange,
+        pulseColor: this.pulseColor,
+        kpoolColor: this.kpoolColor,
+        upperBoundPulseColor: this.upperBoundPulseColor,
+        lowerBoundPulseColor: this.lowerBoundPulseColor,
+        scatterPlotMarkerSize: this.scatterPlotMarkerSize,
+        markerColor: this.markerColor,
+      }
+  }
+
+  saveColorSettingsToBrowser() {
+      const settings:any = this.exportBrowserSettings()
+      localStorage.setItem("taColorSettings", JSON.stringify(settings))
+  }
+
+  importColorSettingsFromBrowser() {
+      const settings = localStorage.getItem("taColorSettings")
+      if (settings) {
+          this.importBrowserSettings(JSON.parse(settings))
+        return true
+      }
+      return false
+  }
+
+  importBrowserSettings(settings: any) {
+      for (const i in settings) {
+          // @ts-ignore
+          this[i] = settings[i]
+      }
   }
 }

@@ -19,6 +19,10 @@ export class AppComponent {
   }
 
   initialize() {
+    if (localStorage.getItem("taColorSettings")) {
+      this.web.settings.importColorSettingsFromBrowser()
+      this.toastService.show('Initialization', 'Loaded color settings from browser local storage...')
+    }
     if (this.accounts.token === "") {
       const token = localStorage.getItem("token")
       if (token) {

@@ -58,7 +58,7 @@ export class TauHistogramComponent {
       title: "Count",
     },
     xaxis: {
-      title: "log2(Tau)",
+      title: "HalfLife_POI",
     },
     bargap: 0,
     shapes: [],
@@ -90,7 +90,7 @@ export class TauHistogramComponent {
       this.graphLayout.title = this.data.Tissue + " " + this.data.Engine
     } else {
       this.graphLayout.title = "Overall distribution"
-      this.graphLayout.width = 1200
+      this.graphLayout.width = 1000
     }
     this.revision++
   }
