@@ -40,6 +40,8 @@ export class ProteinViewPeptideCollectionComponent {
     pageSize: new FormControl<number>(10, [Validators.required, Validators.min(1)]),
     validTAUPOI: new FormControl<boolean>(true),
     view: new FormControl<string>("compact"),
+    sort: new FormControl<string>(""),
+    descending: new FormControl<boolean>(false)
   })
 
 
@@ -62,8 +64,15 @@ export class ProteinViewPeptideCollectionComponent {
       if (value.validTAUPOI) {
         this.displayDF = this.displayDF.where(row => row.tau_POI !== null)
       }
-        this.displayDF = this.displayDF.bake()
-        this.pageSize = value.pageSize
+      if (value.sort && value.sort !== "") {
+        if (value.descending) {
+          this.displayDF = this.displayDF.orderByDescending((row: any) => row[value.sort])
+        } else {
+          this.displayDF = this.displayDF.orderBy((row: any) => row[value.sort])
+        }
+      }
+      this.displayDF = this.displayDF.bake()
+      this.pageSize = value.pageSize
     })
   }
 
