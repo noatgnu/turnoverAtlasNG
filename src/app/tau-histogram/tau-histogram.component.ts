@@ -58,7 +58,7 @@ export class TauHistogramComponent {
       title: "Count",
     },
     xaxis: {
-      title: "HalfLife_POI",
+      title: "log2(tau_POI)",
     },
     bargap: 0,
     shapes: [],
