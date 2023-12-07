@@ -44,7 +44,7 @@
           <div class="card-title">
             <h5 class="card-title">History</h5>
             <ul>
-              <li *ngFor="let item of accounts.currentHistory"><a href="#/protein-view/{{item}}">{{item}}</a></li>
+              <li *ngFor="let item of accounts.currentHistory"><a href="#/protein-view/{{item}}">{{item}} <span *ngIf="uniprotMap[item]['uniProtkbId']">({{uniprotMap[item]['uniProtkbId']}})</span></a></li>
             </ul>
           </div>
         </div>

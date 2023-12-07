@@ -4,6 +4,7 @@ import {FormBuilder, FormControl, Validators} from "@angular/forms";
 import {ToastService} from "../toast.service";
 import {WebService} from "../web.service";
 import {ModelParameters} from "../modelling-data";
+import {forkJoin} from "rxjs";
 
 @Component({
   selector: 'app-home',
@@ -22,11 +23,13 @@ export class HomeComponent {
   selectedModel: ModelParameters[] = []
 
   selectionStatus: {[key: string]: boolean} = {}
+  uniprotMap: {[key: string]: any} = {}
 
   constructor(public accounts: AccountsService, private fb: FormBuilder, private toast: ToastService, public web: WebService) {
     for (let i = 0; i < this.web.modelParameters.length; i++) {
       this.selectionStatus[i] = false
     }
+    this.getUniprotHistory()
   }
 
   loginHandler() {
@@ -80,5 +83,22 @@ export class HomeComponent {
     }
     this.selectionStatus[ind] = !this.selectionStatus[ind]
     this.selectedModel = [...this.selectedModel]
+  }
+
+  getUniprotHistory() {
+    if (this.accounts.currentHistory.length > 0) {
+      const combinedPush: any[] = []
+      for (const i of this.accounts.currentHistory) {
+        combinedPush.push(this.web.getUniprot(i.split(";")[0]))
+      }
+      if (combinedPush.length > 0) {
+        forkJoin(combinedPush).subscribe((data) => {
+          for (let i = 0; i < data.length; i++) {
+            this.uniprotMap[this.accounts.currentHistory[i]] = data[i]
+          }
+        })
+      }
+    }
+
   }
 }

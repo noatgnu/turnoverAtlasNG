@@ -49,7 +49,7 @@ export class AccountsService {
     }
 
     this.currentHistory = [protein, ...this.currentHistory]
-    this.currentHistory = this.currentHistory.slice(0, 10)
+    this.currentHistory = this.currentHistory.slice(0, 30)
     this.saveHistory()
   }
 
