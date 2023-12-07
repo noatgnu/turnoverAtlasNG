@@ -206,7 +206,7 @@ export class CoveragePlotComponent {
         console.log(dataMap)
         if (this.web.settings.minimumHalfLife && this.web.settings.maximumHalfLife && this.form.value.gradient_color) {
           if (this.form.value.gradient_color === true) {
-            this.gradient = chroma.scale(['#fdd46d', '#d90404']).domain([this.web.settings.minimumHalfLife, this.web.settings.maximumHalfLife]).mode('lch')
+            this.gradient = chroma.scale(['#042fd9', '#6dfde7', '#fdfb6d', '#fd876d']).domain([this.web.settings.minimumHalfLife, this.web.settings.maximumHalfLife])
             // draw a plotly js heatmap with 1 single row and 10 columns to display the gradient
             const temp: any = {
               x: [],
@@ -224,13 +224,15 @@ export class CoveragePlotComponent {
             const ticktext: string[] = []
             for (let i=0; i<=1; i = i + 0.1) {
               const value= i*(this.web.settings.maximumHalfLife - this.web.settings.minimumHalfLife) + this.web.settings.minimumHalfLife
-              const color = this.gradient(value).toString()
+              const rgbColor = this.gradient(value)._rgb
+              const color = `rgb(${rgbColor._unclipped[0]}, ${rgbColor._unclipped[1]}, ${rgbColor._unclipped[2]})`
               temp.x.push(i)
               temp.z[0].push(value)
               temp.colorscale.push([i, color])
               tickvals.push(i)
               ticktext.push(value.toFixed(1))
             }
+            temp.colorscale[temp.colorscale.length-1][0] = 1
             this.gradientData = [temp]
             this.gradientLayout.width = 20*temp.x.length + this.gradientLayout.margin.l + this.gradientLayout.margin.r
             this.gradientLayout.height = 20 + this.gradientLayout.margin.b + this.gradientLayout.margin.t
@@ -301,8 +303,10 @@ export class CoveragePlotComponent {
           ticktext.push(this.coverageData.protein_sequence.length)
         }
         console.log(this.graphLayoutMap[group.first().Engine])
+        console.log(tickvals)
+        console.log(ticktext)
         this.graphLayoutMap[group.first().Engine].xaxis.tickvals = tickvals
-        this.graphLayoutMap[group.first().Engine].xaxis.ticktext = ticktext
+        this.graphLayoutMap[group.first().Engine].xaxis.ticktext = ticktext.splice(ticktext.length-1, 1,)
         this.graphDataMap[group.first().Engine] = [tempData]
       })
       this.revision += 1

@@ -23,7 +23,7 @@
     <button type="submit" class="btn btn-primary mt-2">Redraw</button>
   </form>
   <div class="flex-grow-1 overflow-auto">
-    <div *ngFor="let e of engineList">
+    <div *ngFor="let e of engineList" class="d-flex justify-content-center">
       <plotly-plot [config]="config" (plotlyClick)="OnClick($event)" [data]="graphDataMap[e]" [layout]="graphLayoutMap[e]" [revision]="revision"></plotly-plot>
     </div>
   </div>

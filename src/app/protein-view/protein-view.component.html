@@ -1,5 +1,5 @@
 <div class="d-flex justify-content-center align-items-center gap-2">
-  <div><h1><b>{{protein}}</b></h1></div><div><a href="#/protein-summary/{{protein}}" target="_blank"><span class="badge bg-warning">Protein card</span></a></div>
+  <div><h1><b>{{protein}} <span *ngIf="uniprot['uniProtkbId']">({{uniprot['uniProtkbId']}})</span></b></h1></div><div><a href="#/protein-summary/{{protein}}" target="_blank"><span class="badge bg-warning">Protein card</span></a></div>
 </div>
 <div class="container">
   <app-protein-search [data]="df" (filteredData)="handlerFilterDFUpdate($event)"></app-protein-search>
@@ -17,7 +17,7 @@
   </div>
 </ng-container>
 
-<div class="container mt-5" *ngIf="coverageData">
+<div class="container mt-5" *ngIf="!downloading && coverageData">
   <app-coverage-plot [coverageData]="coverageData"></app-coverage-plot>
 </div>
 

@@ -39,11 +39,14 @@ export class ProteinViewComponent {
 
   activeId: number = 1
   filterDFMap: {[key: string]: IDataFrame<number, MSData>} = {}
-
+  uniprot: any = {}
   ready: boolean = false
   @Input() set proteinGroup(value: string) {
     this.initialize(value).then(() => {
       this.web.getMSData(this.protein).subscribe((data) => {
+        this.web.getUniprot(this.protein.split(";")[0]).subscribe((uniprot) => {
+          this.uniprot = uniprot
+        })
         this.msDataProgress = 0
         if (data.type === HttpEventType.DownloadProgress) {
 
@@ -65,13 +68,25 @@ export class ProteinViewComponent {
           }
         }
       })
-      for (const i of value.split(",")) {
+      /*if (!value.includes(";")) {
+        for (const i of value.split(";")) {
+          const payload: any = {
+            valid_tau: false,
+            average_rss: 0,
+            rss: 0,
+          }
+          if (this.web.settings.formExperimentParameters["maxAverageRSS"]) {
+            payload["average_rss"] = this.web.settings.formExperimentParameters["maxAverageRSS"]
+          }
+          if (this.web.settings.formExperimentParameters["maxRSS"]) {
+            payload["rss"] = this.web.settings.formExperimentParameters["maxRSS"]
+          }
+          this.web.getCoverageData(i, payload.valid_tau, payload.average_rss, payload.rss).subscribe((data) => {
+            this.coverageData = data
+          })
+        }
+      }*/
 
-        this.web.getCoverageData(i, false).subscribe((data) => {
-          this.coverageData = data
-          console.log(data)
-        })
-      }
     })
   }
 
@@ -118,6 +133,22 @@ export class ProteinViewComponent {
       for (const filter of this.web.settings.filters) {
         this.filterDFMap[filter.id] = this.updateFilterDFMap(filter)
       }
+    }
+    if (!this.web.settings.currentProteinGroup.includes(";") && this.web.settings.currentProteinGroup !== "") {
+      const payload: any = {
+        valid_tau: false,
+        average_rss: 0,
+        rss: 0,
+      }
+      if (this.web.settings.form["maxAverageRSS"]) {
+        payload["average_rss"] = this.web.settings.form["maxAverageRSS"]
+      }
+      if (this.web.settings.form["maxRSS"]) {
+        payload["rss"] = this.web.settings.form["maxRSS"]
+      }
+      this.web.getCoverageData(this.web.settings.currentProteinGroup, payload.valid_tau, payload.average_rss, payload.rss).subscribe((data) => {
+        this.coverageData = data
+      })
     }
 
     this.ready = true

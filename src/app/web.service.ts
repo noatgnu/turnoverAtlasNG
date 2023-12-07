@@ -178,14 +178,20 @@ export class WebService {
     }
   }
 
-  getCoverageData(proteinGroup: string, valid_tau: boolean = true) {
+  getCoverageData(proteinGroup: string, valid_tau: boolean = true, average_rss: number = 0, rss: number = 0) {
     const params: any = {AccessionID: proteinGroup, valid_tau: valid_tau}
+
     if (valid_tau) {
       params["valid_tau"] = "True"
     } else {
       params["valid_tau"] = "False"
     }
-
+    if (average_rss > 0) {
+      params["average_rss"] = average_rss
+    }
+    if (rss > 0) {
+      params["rss"] = rss
+    }
     return this.http.get<SequenceCoverage>(`${this.baseUrl}/api/proteinsequence/get_coverage/`, {responseType: 'json', observe: 'body', params: params}).pipe()
   }
 
@@ -238,8 +244,15 @@ export class WebService {
     return this.http.get<any>(`${this.baseUrl}/api/turnoverdata/get_histogram/`, {responseType: 'json', observe: 'body'})
   }
 
-  getSummary(Protein_Group: string = "") {
-    return this.http.get<any>(`${this.baseUrl}/api/turnoverdata/get_summary/`, {responseType: 'json', observe: 'body', params: {Protein_Group: Protein_Group}})
+  getSummary(Protein_Group: string = "", average_rss: number = 0, rss: number = 0) {
+    const payload: any = {Protein_Group: Protein_Group}
+    if (average_rss > 0) {
+      payload["average_rss"] = average_rss
+    }
+    if (rss > 0) {
+      payload["rss"] = rss
+    }
+    return this.http.get<any>(`${this.baseUrl}/api/turnoverdata/get_summary/`, {responseType: 'json', observe: 'body', params: payload})
   }
 
   getUniprot(Protein_Group: string = "") {

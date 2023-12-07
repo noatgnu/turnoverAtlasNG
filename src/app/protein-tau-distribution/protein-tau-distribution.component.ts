@@ -11,6 +11,7 @@ import {FormBuilder, FormControl} from "@angular/forms";
 })
 export class ProteinTauDistributionComponent {
   private _data: IDataFrame<number, MSData> = new DataFrame()
+  size: number = 50
   @Input() set data(value: IDataFrame<number, MSData>) {
     this._data = value
     this._data = this._data.orderByDescending((row) => {row.Tissue}).bake()
@@ -22,6 +23,13 @@ export class ProteinTauDistributionComponent {
   revision: number = 0
   graphDataMap: any = {}
   graphLayoutBase: any = {
+    margin: {
+      l: 50,
+      r: 50,
+      b: 50,
+      t: 50,
+    },
+
     title: "",
     xaxis: {
       title: "Tissue",
@@ -51,7 +59,7 @@ export class ProteinTauDistributionComponent {
   form = this.fb.group({
     hideNotSelected: new FormControl(false),
     category: new FormControl("HalfLife_POI"),
-    log2: new FormControl(true),
+    log2: new FormControl(false),
     color: new FormControl("rgba(236,96,99,0.78)"),
   })
 
@@ -92,6 +100,7 @@ export class ProteinTauDistributionComponent {
             text: [],
             name: row.Tissue,
             type: "box",
+            boxmean: true,
             boxpoints: "all",
             jitter: 0.3,
             pointpos: -1.8,
@@ -115,7 +124,7 @@ export class ProteinTauDistributionComponent {
           if (this.form.value.hideNotSelected) {
             temp[row.Engine][row.Tissue].marker.color.push("rgba(140,140,140,0)")
           } else {
-            temp[row.Engine][row.Tissue].marker.color.push("rgba(140,140,140,0.13)")
+            temp[row.Engine][row.Tissue].marker.color.push("rgba(140,140,140,0.5)")
           }
         }
         temp[row.Engine][row.Tissue].text.push(row.Precursor_Id)
@@ -129,6 +138,7 @@ export class ProteinTauDistributionComponent {
           }
 
           this.graphLayoutMap[engine].title = engine
+
           this.graphDataMap[engine] = []
         }
         for (const tissue in temp[engine]) {
@@ -137,6 +147,7 @@ export class ProteinTauDistributionComponent {
         this.graphDataMap[engine].sort((a: any, b: any) => {
           return a.name.localeCompare(b.name)
         })
+        this.graphLayoutMap[engine].width = this.graphLayoutMap[engine].margin.l + this.graphLayoutMap[engine].margin.r +  this.graphDataMap[engine].length * this.size
       }
     }
 

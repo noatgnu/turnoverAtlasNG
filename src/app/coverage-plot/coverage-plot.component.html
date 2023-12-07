@@ -35,7 +35,15 @@
                     </label>
                   </div>
                 </form>
-                <plotly-plot (plotlyClick)="clickHandler($event)" (clickAnnotation)="clickHandler($event)" [config]="config" [updateOnlyWithRevision]="true" [revision]="revision" *ngFor="let e of engines" [data]="graphDataMap[e]" [layout]="graphLayoutMap[e]"></plotly-plot>
+              <ng-container *ngFor="let e of engines">
+                <plotly-plot *ngIf="graphDataMap[e]; else nodata" (plotlyClick)="clickHandler($event)" (clickAnnotation)="clickHandler($event)" [config]="config" [updateOnlyWithRevision]="true" [revision]="revision" [data]="graphDataMap[e]"  [layout]="graphLayoutMap[e]"></plotly-plot>
+                <ng-template #nodata>
+                  <div class="d-flex justify-content-center">
+                    <span>No data for {{e}}</span>
+                  </div>
+                </ng-template>
+              </ng-container>
+
               <div class="d-flex justify-content-center">
                 <plotly-plot [data]="gradientData" [layout]="gradientLayout" *ngIf="form.value['gradient_color']===true" [revision]="revision" [updateOnlyWithRevision]="true"></plotly-plot>
               </div>

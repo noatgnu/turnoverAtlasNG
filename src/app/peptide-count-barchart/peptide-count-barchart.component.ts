@@ -63,9 +63,22 @@ export class PeptideCountBarchartComponent {
   }
 
   constructor(private web: WebService) {
-    this.web.getSummary(this.web.settings.currentProteinGroup).subscribe((data) => {
+    const payload: any = {
+      ProteinGroup: this.web.settings.currentProteinGroup,
+      average_rss: 0,
+      rss: 0,
+    }
+    if (this.web.settings.form["maxAverageRSS"] && this.web.settings.form["maxAverageRSS"] !== null) {
+      payload["average_rss"] = this.web.settings.form["maxAverageRSS"]
+    }
+    if (this.web.settings.form["maxRSS"] && this.web.settings.form["maxRSS"] !== null) {
+      payload["rss"] = this.web.settings.form["maxRSS"]
+    }
+
+    this.web.getSummary(payload.ProteinGroup, payload.average_rss, payload.rss).subscribe((data) => {
       this.data = new DataFrame(data)
     })
+
     this.web.redrawSubject.subscribe((data) => {
       this.drawGraph()
     })
