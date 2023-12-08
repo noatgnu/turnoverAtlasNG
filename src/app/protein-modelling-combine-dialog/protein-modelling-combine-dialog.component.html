@@ -1,0 +1,32 @@
+<div class="modal-header">
+  <h1 class="modal-title">Combined model plot</h1>
+</div>
+<div class="modal-body">
+  <div class="d-flex justify-content-start">
+    <div>
+      <div class="card">
+        <div class="card-body">
+          <form [formGroup]="form" (ngSubmit)="drawGraph()">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" formControlName="hideNotSelected">
+              <label class="form-check-label">Make non-selected data transparent</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" formControlName="kpool" type="checkbox" id="kpool">
+              <label class="form-check-label" for="kpool">Show free Lys pool model</label>
+            </div>
+            <div class="d-flex align-items-center gap-1">
+              <div><ngx-colors ngx-colors-trigger formControlName="kpoolColor"></ngx-colors></div><div>Free Lys pool</div>
+            </div>
+            <button type="submit" class="btn btn-primary">Redraw</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="flex-grow-1">
+      <plotly-plot [revision]="revision" [updateOnlyWithRevision]="true" [data]="graphData" [layout]="graphLayout"></plotly-plot>
+    </div>
+
+  </div>
+
+</div>

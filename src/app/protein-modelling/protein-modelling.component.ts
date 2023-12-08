@@ -4,6 +4,10 @@ import {Modelling} from "../modelling-data";
 import {WebService} from "../web.service";
 import {MSData} from "../msdata";
 import {ToastService} from "../toast.service";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {
+  ProteinModellingCombineDialogComponent
+} from "../protein-modelling-combine-dialog/protein-modelling-combine-dialog.component";
 
 @Component({
   selector: 'app-protein-modelling',
@@ -40,24 +44,58 @@ export class ProteinModellingComponent {
   graphData: any[] = []
   graphLayout: any = {
     title: "",
-    width: 400,
+    width: 450,
+    margin: {
+      l: 50,
+      r: 50,
+      b: 50,
+      t: 50,
+    },
     xaxis: {
       title: "Time (days)",
-      range: [0, 50]
+      range: this.web.settings.scatterPlotXAxisRange,
+      showgrid: false,
+      zeroline: false,
     },
     yaxis: {
-      title: "H + H/L",
+      title: "H/(H+L)",
+      range: this.web.settings.scatterPlotYAxisRange,
+      ticklen: 5,
+      showgrid: false,
+      zeroline: false,
     },
-    annotations: [],
-    font: {
-      family: "Arial",
-      color: "black"
-    }
+    legend: {
+      orientation: 'h'
+    },
+    shapes: [
+      {
+        type: 'line',
+        x0: this.web.settings.scatterPlotXAxisRange[0],
+        y0: this.web.settings.scatterPlotYAxisRange[0],
+        x1: this.web.settings.scatterPlotXAxisRange[1],
+        y1: this.web.settings.scatterPlotYAxisRange[0],
+        line: {
+          color: "black",
+          width: 2,
+        },
+      },
+      {
+        type: 'line',
+        x0: this.web.settings.scatterPlotXAxisRange[0],
+        y0: this.web.settings.scatterPlotYAxisRange[0],
+        x1: this.web.settings.scatterPlotXAxisRange[0],
+        y1: this.web.settings.scatterPlotYAxisRange[1],
+        line: {
+          color: "black",
+          width: 2,
+        },
+      },
+    ]
   }
 
   engines: string[] = []
 
-  constructor(private web: WebService, private toasts: ToastService) {
+  constructor(private web: WebService, private toasts: ToastService, private modal: NgbModal) {
     this.web.redrawSubject.subscribe(() => {
       this.drawModel()
     })
@@ -76,7 +114,7 @@ export class ProteinModellingComponent {
       const model = this.web.modelParameters.filter((row) => {
         return row.Engine === group.first().Engine && row.Tissue === group.first().Tissue
       })
-
+      console.log(model)
       if (model.length > 0 && this.web.settings.modellingKPool) {
         const temp: any = {
           x: model[0].k_pool.map((x) => {return x.day}),
@@ -102,6 +140,9 @@ export class ProteinModellingComponent {
             y: i.tau_model.map((x) => {
               return x.value
             }),
+            text: i.tau_model.map((x) => {
+              return `Day: ${x.day}<br>Value: ${x.value}<br>HalfLife: ${i.HalfLife_POI}<br>AverageRSS: ${i.AverageRSS}<br>${i.Precursor_Id}`
+            }),
             mode: 'lines',
             data: i.id,
             name: i.Precursor_Id,
@@ -110,7 +151,7 @@ export class ProteinModellingComponent {
               shape: 'spline',
             },
             showlegend: false,
-            hovertemplate: "Day: %{x}<br>Value: %{y}<br>"+i.Precursor_Id
+            hovertemplate: "%{text}"
           }
           graphDataMap[group.first().Engine].push(temp)
         } else {
@@ -121,6 +162,9 @@ export class ProteinModellingComponent {
             y: i.tau_model.map((x) => {
               return x.value
             }),
+            text: i.tau_model.map((x) => {
+              return `Day: ${x.day}<br>Value: ${x.value}<br>HalfLife: ${i.HalfLife_POI}<br>AverageRSS: ${i.AverageRSS}<br>${i.Precursor_Id}`
+            }),
             mode: 'lines',
             data: i.id,
             name: i.Precursor_Id,
@@ -129,7 +173,7 @@ export class ProteinModellingComponent {
               shape: 'spline',
             },
             showlegend: false,
-            hovertemplate: "Day: %{x}<br>Value: %{y}<br>"+i.Precursor_Id
+            hovertemplate: "%{text}"
           }
           if (this.hideNotSelected) {
             temp.line.color = "rgba(140,140,140,0)"
@@ -172,5 +216,10 @@ export class ProteinModellingComponent {
           this.web.selectionHandler(ids)
       }
     }
+  }
+
+  combine() {
+    const ref = this.modal.open(ProteinModellingCombineDialogComponent, {size: "xl"})
+    ref.componentInstance.data = this.data
   }
 }

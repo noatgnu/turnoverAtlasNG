@@ -106,7 +106,6 @@ export class ScatterTimePlotComponent {
             width: 1
           }
         },
-
       }
       for (const i of this._data.values) {
         if (this.web.settings.selectedSamples.includes(i.Sample_Name)) {

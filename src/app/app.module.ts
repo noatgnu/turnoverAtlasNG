@@ -45,6 +45,7 @@ import { ProteinSummaryComponent } from './protein-summary/protein-summary.compo
 import { FilterPresetComponent } from './filter-preset/filter-preset.component';
 import { PeptideCountBarchartComponent } from './peptide-count-barchart/peptide-count-barchart.component';
 import { AverageHalflifeBarchartComponent } from './average-halflife-barchart/average-halflife-barchart.component';
+import { ProteinModellingCombineDialogComponent } from './protein-modelling-combine-dialog/protein-modelling-combine-dialog.component';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 @NgModule({
@@ -80,7 +81,8 @@ PlotlyModule.plotlyjs = PlotlyJS;
     ProteinSummaryComponent,
     FilterPresetComponent,
     PeptideCountBarchartComponent,
-    AverageHalflifeBarchartComponent
+    AverageHalflifeBarchartComponent,
+    ProteinModellingCombineDialogComponent
   ],
     imports: [
         BrowserModule,

@@ -41,6 +41,9 @@ export class AppComponent {
           this.web.settings.sampleMap[s.Sample_Name] = s
         }
         this.web.modelParameters = data[1]
+        for(const w of this.web.modelParameters) {
+          console.log(w.Tissue)
+        }
         this.ready = true
       }, (error) => {
         this.toastService.show('Initialization', 'Error loading sample metadata and model parameters. Please log in.')
