@@ -306,7 +306,7 @@ export class CoveragePlotComponent {
         console.log(tickvals)
         console.log(ticktext)
         this.graphLayoutMap[group.first().Engine].xaxis.tickvals = tickvals
-        this.graphLayoutMap[group.first().Engine].xaxis.ticktext = ticktext.splice(ticktext.length-1, 1,)
+        this.graphLayoutMap[group.first().Engine].xaxis.ticktext = ticktext
         this.graphDataMap[group.first().Engine] = [tempData]
       })
       this.revision += 1
