@@ -1,8 +1,9 @@
 import {Component, Input} from '@angular/core';
 import {DataFrame, IDataFrame} from "data-forge";
-import {MSData} from "../msdata";
+import {MSData, MSDataValues} from "../msdata";
 import {debounceTime, distinctUntilChanged, map, Observable, OperatorFunction} from "rxjs";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {WebService} from "../web.service";
 
 @Component({
   selector: 'app-protein-view-peptide-collection',
@@ -46,7 +47,7 @@ export class ProteinViewPeptideCollectionComponent {
 
 
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private web: WebService) {
     this.form.controls['filterPrecursorID'].valueChanges.subscribe((value) => {
       this.displayDF = this.data.where(row => row.Precursor_Id.indexOf(value.filterPrecursorID.toUpperCase()) > -1)
     })
@@ -82,5 +83,34 @@ export class ProteinViewPeptideCollectionComponent {
   FILTER_PAG_REGEX = /[^0-9]/g;
   formatInput(input: HTMLInputElement) {
     input.value = input.value.replace(this.FILTER_PAG_REGEX, '');
+  }
+
+  exportHandler(fileType: string) {
+    const delimiter = fileType.toLowerCase() === "csv" ? "," : "\t"
+    let a = ""
+    if (fileType === "json") {
+      a = this.displayDF.toJSON()
+    } else {
+      // @ts-ignore
+      let b = this.displayDF.inflateSeries("values", (row: MSDataValues[]) => {
+        const newRow: any = {}
+        for (const i of row) {
+
+          newRow[`${this.web.settings.sampleMap[i.Sample_Name].Days} - ${i.Sample_Name}`] = i.Sample_H_over_HL
+        }
+        return newRow
+      })
+      b = b.dropSeries(["values", "tau_model"])
+      a = b.toCSV(// @ts-ignore
+        {delimiter: delimiter}
+      )
+    }
+    const blob = new Blob([a], {type: "text/plain;charset=utf-8"})
+    const element = document.createElement('a');
+    element.href = URL.createObjectURL(blob);
+    element.download = `export_data.${fileType.toLowerCase()}`;
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
   }
 }
