@@ -25,6 +25,7 @@ export class ProteinViewPeptideCollectionComponent {
       this.displayDF = value
     }
     this.precursorID = this._data.getSeries("Precursor_Id").distinct().toArray()
+    this.form.reset()
   }
 
   get data(): IDataFrame<number, MSData> {
