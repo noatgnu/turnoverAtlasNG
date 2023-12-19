@@ -43,7 +43,7 @@ export class PeptideCountBarchartComponent {
       showticklabels: true,
     },
     xaxis: {
-      title: "Tissue",
+      title: "",
       type: "category",
       tickmode: "array",
       tickvals: [],
@@ -77,10 +77,26 @@ export class PeptideCountBarchartComponent {
 
     this.web.getSummary(payload.ProteinGroup, payload.average_rss, payload.rss).subscribe((data) => {
       this.data = new DataFrame(data)
+      this.drawGraph()
     })
 
     this.web.redrawSubject.subscribe((data) => {
-      this.drawGraph()
+      if (this.web.settings.form["maxAverageRSS"] && this.web.settings.form["maxAverageRSS"] !== null) {
+        payload["average_rss"] = this.web.settings.form["maxAverageRSS"]
+      } else {
+        payload["average_rss"] = 0
+      }
+      if (this.web.settings.form["maxRSS"] && this.web.settings.form["maxRSS"] !== null) {
+        payload["rss"] = this.web.settings.form["maxRSS"]
+      } else {
+        payload["rss"] = 0
+      }
+
+      this.web.getSummary(payload.ProteinGroup, payload.average_rss, payload.rss).subscribe((data) => {
+        this.data = new DataFrame(data)
+        this.drawGraph()
+      })
+
     })
   }
 

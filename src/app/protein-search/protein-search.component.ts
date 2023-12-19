@@ -139,6 +139,7 @@ export class ProteinSearchComponent {
 
     this.filteredDF = this.filteredDF.bake()
     this.web.settings.form = this.form.value
+    console.log(this.web.settings.form)
     this.web.settings.formExperimentParameters = this.formExperimentParameters.value
     this.web.tissues = this.filteredDF.getSeries("Tissue").distinct().toArray()
     this.web.engines = this.filteredDF.getSeries("Engine").distinct().toArray()

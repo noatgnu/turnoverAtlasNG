@@ -204,8 +204,7 @@ export class ScatterTimePlotComponent {
         }
         graphData.push(pulseModel)
 
-        const kpoolData = await this.web.getKpool(this._data.Tissue, this._data.Engine, 1, 0, 51).toPromise()
-
+        const kpoolData = await this.web.getKpool(this._data.Tissue, this._data.Engine, 0.5, 0, 50).toPromise()
         const kpoolModel: any = {
           x: [],
           y: [],

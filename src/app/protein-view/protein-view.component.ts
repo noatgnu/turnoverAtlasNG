@@ -152,6 +152,7 @@ export class ProteinViewComponent {
     }
 
     this.ready = true
+    this.web.redrawSubject.next(true)
   }
 
   async initialize(value: any) {

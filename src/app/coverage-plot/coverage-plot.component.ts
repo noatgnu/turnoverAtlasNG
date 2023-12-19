@@ -302,9 +302,7 @@ export class CoveragePlotComponent {
           tickvals.push(this.coverageData.protein_sequence.length)
           ticktext.push(this.coverageData.protein_sequence.length)
         }
-        console.log(this.graphLayoutMap[group.first().Engine])
-        console.log(tickvals)
-        console.log(ticktext)
+
         this.graphLayoutMap[group.first().Engine].xaxis.tickvals = tickvals
         this.graphLayoutMap[group.first().Engine].xaxis.ticktext = ticktext
         this.graphDataMap[group.first().Engine] = [tempData]

@@ -218,7 +218,7 @@ export class WebService {
     return this.http.delete<any>(`${this.baseUrl}/api/session/${id}/`, {responseType: 'json', observe: 'body'})
   }
 
-  getKpool(tissue: string, engine: string, step: 1, start: 0, end: 51) {
+  getKpool(tissue: string, engine: string, step: number= 0.5, start: number = 0, end: number = 50) {
     return this.http.get<any>(`${this.baseUrl}/api/modelling/`, {responseType: 'json', observe: 'body', params: {tissue: tissue, engine: engine, step: step, start: start, end: end}})
   }
 
