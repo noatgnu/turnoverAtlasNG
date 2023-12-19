@@ -70,6 +70,7 @@ export class ProteinModellingCollectionComponent {
       this.groupData = this.data.where((df) => {
         return this.selectedTissues.includes(df.first().Tissue)
       }).bake()
+      this.web.redrawSubject.next(true)
     }
   }
 
