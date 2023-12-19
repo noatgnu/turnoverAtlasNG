@@ -12,6 +12,11 @@
   <div class="container mt-5" *ngIf="filteredData.count() > 0; else empty">
     <app-protein-tau-collection [data]="filteredData"></app-protein-tau-collection>
   </div>
+
+  <div class="container mt-5" *ngIf="modellingDataGroup.count() > 0">
+    <app-summary></app-summary>
+  </div>
+
   <div class="container mt-5" *ngIf="modellingDataGroup.count() > 0; else loadingModelling">
     <app-protein-modelling-collection [data]="modellingDataGroup"></app-protein-modelling-collection>
   </div>
@@ -20,6 +25,9 @@
 <div class="container mt-5" *ngIf="!downloading && coverageData">
   <app-coverage-plot [coverageData]="coverageData"></app-coverage-plot>
 </div>
+
+
+
 
 <ng-container *ngIf="!downloading">
   <div class="container mt-5" *ngIf="filteredData.count() > 0">

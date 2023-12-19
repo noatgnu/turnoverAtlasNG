@@ -35,8 +35,9 @@ export class ProteinSummaryComponent {
         }
       })
     }
-
   }
+
+  @Input() showProteinInfo: boolean = true
 
   get proteinGroup(): string {
     return this._proteinGroup

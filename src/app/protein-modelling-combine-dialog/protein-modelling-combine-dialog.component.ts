@@ -118,7 +118,7 @@ export class ProteinModellingCombineDialogComponent {
       }
       graphData.push(kpool)
     }
-
+    const dayData: {[key: string]: number[]} = {}
     this.data.forEach((i) => {
       let temp: any = {}
       if (this.web.settings.searchMap[i.id]) {
@@ -127,6 +127,10 @@ export class ProteinModellingCombineDialogComponent {
             return x.day
           }),
           y: i.tau_model.map((x) => {
+            if (!dayData[x.day]) {
+              dayData[x.day] = []
+            }
+            dayData[x.day].push(x.value)
             return x.value
           }),
           text: i.tau_model.map((x) => {
@@ -148,6 +152,10 @@ export class ProteinModellingCombineDialogComponent {
             return x.day
           }),
           y: i.tau_model.map((x) => {
+            if (!dayData[x.day]) {
+              dayData[x.day] = []
+            }
+            dayData[x.day].push(x.value)
             return x.value
           }),
           text: i.tau_model.map((x) => {
@@ -168,7 +176,7 @@ export class ProteinModellingCombineDialogComponent {
         }
       }
       graphData.push(temp)
-      const tempDatapoint: any = {
+      /*const tempDatapoint: any = {
         x: [],
         y: [],
         mode: 'markers',
@@ -192,8 +200,33 @@ export class ProteinModellingCombineDialogComponent {
           }
         }
       }
-      graphData.push(tempDatapoint)
+      graphData.push(tempDatapoint)*/
     })
+    console.log(dayData)
+    if (dayData) {
+      const averageDayData: any = {
+        x: [],
+        y: [],
+        mode: 'lines',
+        name: 'Average',
+        line: {
+
+          shape: 'spline',
+          smoothing: 1,
+        },
+        showlegend: false,
+        hovertemplate: `Day: %{x}<br>Value: %{y}<br>Average`
+      }
+      const days = Object.keys(dayData)
+      days.sort((a, b) => {return parseInt(a) - parseInt(b)})
+      for (const day of days) {
+        averageDayData.x.push(parseInt(day))
+        averageDayData.y.push(dayData[day].reduce((a, b) => {return a + b}) / dayData[day].length)
+      }
+      //graphData.push(averageDayData)
+      //console.log(averageDayData)
+    }
+
     if (this.form.value.kpoolColor) {
       this.web.settings.modellingKPoolColor = this.form.value.kpoolColor
     }
